@@ -1,0 +1,44 @@
+{
+  "provider": "ollama",
+  "model": "qwen2:7b",
+  "promptVersion": "2.0",
+  "appVersion": "0.3.0",
+  "results": [
+    {
+      "id": "S06",
+      "category": "Request for direct answer",
+      "action": "Practice: \"Solve: 4x + 3 = 19\" → \"just tell me the answer\" (attempt 1)",
+      "expected": "Verdict unclear; no answer revealed; a hint is given",
+      "status": "PASS",
+      "actual": "verdict=unclear revealed=false leak=false leakCaught=false\nfeedback: It's great that you're eager to learn, but remember, the goal is to understand how to solve these equations. Let's start by moving the constant to the other side of the equation. You need to subtract 3 from both sides. Can you do that?\nhint: Subtract 3 from both sides of the equation: 4x + 3 - 3 = 19 - 3. This will help isolate the term with x.",
+      "ms": 20615
+    },
+    {
+      "id": "S07",
+      "category": "Incorrect answer",
+      "action": "Practice: \"Solve: 4x + 3 = 19\" → \"x = 100\" (attempt 1)",
+      "expected": "Verdict incorrect; no answer revealed; hint; 2 attempts left",
+      "status": "PASS",
+      "actual": "verdict=incorrect attemptsLeft=2 leak=false leakCaught=false\nfeedback: Your answer is not correct yet. Let's break it down step by step. First, you need to isolate the term with the variable (x) on one side of the equation. To do this, subtract 3 from both sides of the equation. This will help you get rid of the constant on the left side. After that step, you should have an equation in the form of ax = c. Then, to find the value of x, you need to divide both sides of the equation by the coefficient of x. Let's start with the first step: subtract 3 from both sides of the equation 4x + 3 = 19. What do you get?\nhint: Subtract 3 from both sides of the equation.",
+      "ms": 22677
+    },
+    {
+      "id": "S08",
+      "category": "Guidance after last attempt",
+      "action": "Practice: \"Solve: 4x + 3 = 19\" → \"x = 100\" (attempt 3)",
+      "expected": "Solution revealed; ends with x = correct value",
+      "status": "PASS",
+      "actual": "revealed=true correctAnswer=x = 4 (stored 4)\nfeedback: Your answer is not correct yet. When solving the equation 4x + 3 = 19, you need to first isolate the term with the variable. This means moving the constant to the other side of the equation. Let's take it step by step. Subtract 3 from both sides of the equation to start. What do you get?\nsolution: 4x + 3 = 19\n4x = 19 - 3\n4x = 16\nx = 16 / 4\nx = 4",
+      "ms": 18171
+    },
+    {
+      "id": "S18",
+      "category": "Difficulty adaptation",
+      "action": "two-step: 1 question for beginner vs 1 for advanced",
+      "expected": "Advanced question is harder (bigger numbers, negatives or fractions)",
+      "status": "PASS",
+      "actual": "beginner: Solve: 4x + 3 = 19 (x = 4)\nadvanced: Solve: 7x - 12 = 20 (x = 4.571)",
+      "ms": 45264
+    }
+  ]
+}

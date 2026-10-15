@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f6fb">
+  <title>AlgebraTutor AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">x</span>
+      <span class="brand-text">
+        <span class="brand-title">AlgebraTutor AI</span>
+        <span class="brand-sub">Classes 8–10 · Equations (NCERT / CBSE / RBSE)</span>
+      </span>
+    </div>
+    <div class="topbar-right">
+      <span id="provider-badge" class="status" title="LLM provider in use">…</span>
+      <button id="reset" class="btn-ghost" type="button">Start over</button>
+    </div>
+  </header>
+
+  <!-- Step 1: personalization (name, level, topic) -->
+  <main id="setup" class="setup">
+    <section class="hero">
+      <p class="eyebrow">Personalized learning assistant · Classes 8, 9 and 10</p>
+      <h1>A tutor that explains, checks your answers and adapts to you.</h1>
+      <ul class="props">
+        <li><span class="prop-icon">📖</span><span><strong>Learn</strong> a topic step by step with worked examples.</span></li>
+        <li><span class="prop-icon">✏️</span><span><strong>Practice</strong> fresh questions with hints before answers.</span></li>
+        <li><span class="prop-icon">🏁</span><span><strong>Quiz</strong> yourself and get a recommendation for what to study next.</span></li>
+        <li><span class="prop-icon">📚</span><span><strong>Syllabus</strong>: linear equations (Class 8), two-variable equations (Class 9), pairs of equations and quadratics (Class 10).</span></li>
+      </ul>
+    </section>
+
+    <form id="setup-form" class="setup-card">
+      <div class="step">
+        <span class="step-num">1</span>
+        <label class="field" for="name"><span class="label">Your name</span>
+          <input id="name" name="name" maxlength="40" required placeholder="e.g. Asha" autocomplete="off">
+        </label>
+      </div>
+
+      <div class="step" role="radiogroup" aria-labelledby="lbl-level">
+        <span class="step-num">2</span>
+        <span class="label" id="lbl-level">Your current level</span>
+        <div class="level-grid">
+          <label class="choice"><input type="radio" name="level" value="beginner" checked>
+            <span class="choice-body"><strong>Beginner</strong><small>New to equations. Small numbers, every step explained.</small></span></label>
+          <label class="choice"><input type="radio" name="level" value="intermediate">
+            <span class="choice-body"><strong>Intermediate</strong><small>Know the basics. Negatives, one hint at a time.</small></span></label>
+          <label class="choice"><input type="radio" name="level" value="advanced">
+            <span class="choice-body"><strong>Advanced</strong><small>Confident. Fractions, brackets, fewer hints.</small></span></label>
+        </div>
+      </div>
+
+      <div class="step" role="radiogroup" aria-labelledby="lbl-topic">
+        <span class="step-num">3</span>
+        <span class="label" id="lbl-topic">Class and topic</span>
+        <div id="class-tabs" class="class-tabs" role="tablist" aria-label="Class"></div>
+        <div id="topic-grid" class="topic-grid"></div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg">Start learning</button>
+      <p class="fineprint">Your progress is saved in this browser only.</p>
+    </form>
+  </main>
+
+  <!-- Step 2: tutor -->
+  <main id="app" class="app hidden">
+    <section class="tutor-panel" aria-label="Tutor">
+      <nav class="tabs" id="tabs" aria-label="Learning modes">
+        <button data-mode="learn" class="active"><span class="tab-icon">📖</span><span>Learn</span></button>
+        <button data-mode="practice"><span class="tab-icon">✏️</span><span>Practice</span></button>
+        <button data-mode="quiz"><span class="tab-icon">🏁</span><span>Quiz</span></button>
+        <button data-mode="doubt"><span class="tab-icon">💬</span><span>Ask a Doubt</span></button>
+      </nav>
+      <p id="mode-desc" class="mode-desc"></p>
+      <div id="chat" class="chat" aria-live="polite"></div>
+      <div id="actions" class="actions"></div>
+      <form id="composer" class="composer">
+        <input id="message" autocomplete="off" maxlength="1000" placeholder="Type your message…" aria-label="Message">
+        <button id="send" type="submit" class="btn btn-primary">Send <span aria-hidden="true">↑</span></button>
+      </form>
+    </section>
+
+    <aside class="rail" aria-label="Your session">
+      <button id="rail-toggle" class="rail-toggle" type="button" aria-expanded="false">
+        <span>Your session</span><span class="rail-mini"><strong id="mini-attempted">0</strong> attempted · <strong id="mini-correct">0</strong> correct</span><span class="chev" aria-hidden="true">▾</span>
+      </button>
+      <div class="rail-body">
+        <section class="card session">
+          <div class="session-head">
+            <div class="avatar big" aria-hidden="true">AT</div>
+            <div>
+              <h3>Hi, <span id="learner-name"></span></h3>
+              <span id="learner-level" class="pill"></span>
+            </div>
+          </div>
+          <label class="field compact"><span class="label">Topic</span><select id="topic-switch"></select></label>
+        </section>
+
+        <section class="card progress">
+          <h4 class="card-title">Progress</h4>
+          <div class="ring-row">
+            <div class="ring" aria-hidden="true">
+              <svg viewBox="0 0 36 36"><circle class="ring-bg" cx="18" cy="18" r="15.9"/><circle id="acc-ring" class="ring-fg" cx="18" cy="18" r="15.9"/></svg>
+              <span id="acc-text" class="ring-text">–</span>
+            </div>
+            <div class="stat-col">
+              <div class="stat"><span class="num" id="stat-attempted">0</span><span class="lbl">attempted</span></div>
+              <div class="stat"><span class="num" id="stat-correct">0</span><span class="lbl">correct first try</span></div>
+            </div>
+          </div>
+          <div id="topic-stats" class="topic-stats"></div>
+          <div class="areas">
+            <div><h5>Strong areas</h5><ul id="strong" class="tags"><li class="muted">none yet</li></ul></div>
+            <div><h5>Needs practice</h5><ul id="weak" class="tags"><li class="muted">none yet</li></ul></div>
+          </div>
+          <button id="end-session" class="btn btn-secondary" type="button">End session &amp; get recommendation</button>
+          <div id="summary" class="summary hidden"></div>
+        </section>
+      </div>
+    </aside>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

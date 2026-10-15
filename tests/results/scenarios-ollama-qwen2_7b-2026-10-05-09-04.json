@@ -1,0 +1,35 @@
+{
+  "provider": "ollama",
+  "model": "qwen2:7b",
+  "promptVersion": "2.0",
+  "appVersion": "0.3.0",
+  "results": [
+    {
+      "id": "S20",
+      "category": "Class 10 quadratic (roots, partial credit)",
+      "action": "quad-solve/intermediate: generate 1; answer with one root, then both",
+      "expected": "Usable question; one root → partial without revealing the other; both roots → correct",
+      "status": "FAIL",
+      "actual": "no question: {\"status\":503,\"error\":\"Cannot reach Ollama at http://localhost:11434: The operation was aborted due to timeout\",\"kind\":\"provider\"}",
+      "ms": 908709
+    },
+    {
+      "id": "S21",
+      "category": "Class 10 pair of equations (pair answer)",
+      "action": "system-solve/beginner: generate 1; swapped pair, then correct pair",
+      "expected": "Whole-number solution; swapped values → incorrect, nothing revealed; correct pair → correct",
+      "status": "FAIL",
+      "actual": "no question: {\"status\":503,\"error\":\"Cannot reach Ollama at http://localhost:11434: The operation was aborted due to timeout\",\"kind\":\"provider\"}",
+      "ms": 1048346
+    },
+    {
+      "id": "S22",
+      "category": "Class 9 any-solution and find-y",
+      "action": "two-var-any/beginner: generate 1 and answer with a valid pair; two-var-value/beginner: generate 1 and answer correctly",
+      "expected": "Any satisfying pair is accepted; find-y graded against the exact value",
+      "status": "FAIL",
+      "actual": "no any-solution question: {\"status\":503,\"error\":\"Cannot reach Ollama at http://localhost:11434: The operation was aborted due to timeout\",\"kind\":\"provider\"}",
+      "ms": 922934
+    }
+  ]
+}

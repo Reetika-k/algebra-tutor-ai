@@ -1,0 +1,35 @@
+{
+  "provider": "ollama",
+  "model": "qwen2:7b",
+  "promptVersion": "2.0",
+  "appVersion": "0.3.0",
+  "results": [
+    {
+      "id": "S20",
+      "category": "Class 10 quadratic (roots, partial credit)",
+      "action": "quad-solve/intermediate: generate 1; answer with one root, then both",
+      "expected": "Usable question; one root → partial without revealing the other; both roots → correct",
+      "status": "PASS",
+      "actual": "Solve: x² - 3x - 10 = 0 [roots -2, 5]\none root → partial, leak=false: You've found one of the roots correctly, which is x = -2. Remember, a quadratic equation like this one has two roots. You've missed the second root. Think about how you can find the other solution by splitting the middle term or using the quadratic formula. Try to find the value of x that makes the equation true when substituted for x.\nboth → correct",
+      "ms": 76381
+    },
+    {
+      "id": "S21",
+      "category": "Class 10 pair of equations (pair answer)",
+      "action": "system-solve/beginner: generate 1; swapped pair, then correct pair",
+      "expected": "Whole-number solution; swapped values → incorrect, nothing revealed; correct pair → correct",
+      "status": "PASS",
+      "actual": "Solve: 2x + 3y = 12 and x - y = 1 [x = 3, y = 2, repaired]\nswapped → incorrect; correct → correct",
+      "ms": 85657
+    },
+    {
+      "id": "S22",
+      "category": "Class 9 any-solution and find-y",
+      "action": "two-var-any/beginner: generate 1 and answer with a valid pair; two-var-value/beginner: generate 1 and answer correctly",
+      "expected": "Any satisfying pair is accepted; find-y graded against the exact value",
+      "status": "PASS",
+      "actual": "Write any one solution of 2x + 3y = 12. → (1, 3.3333333333333335) correct\nIf 4x + 2y = 16, find y when x = 2. → correct",
+      "ms": 126405
+    }
+  ]
+}

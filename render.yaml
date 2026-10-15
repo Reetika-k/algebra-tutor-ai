@@ -1,0 +1,17 @@
+# Render.com blueprint: one free web service running the Node server.
+# After connecting the repo, set ANTHROPIC_API_KEY in the Render dashboard (it is not stored in this file).
+services:
+  - type: web
+    name: algebra-tutor-ai
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: LLM_PROVIDER
+        value: claude
+      - key: CLAUDE_MODEL
+        value: claude-opus-5
+      - key: ANTHROPIC_API_KEY
+        sync: false
