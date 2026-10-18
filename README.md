@@ -114,12 +114,17 @@ LLM_PROVIDER=ollama npm start
 ## Testing
 
 ```bash
-npm test                 # 34 deterministic unit tests, no network
-npm run test:scenarios   # 19 AI scenarios against the configured provider → tests/results/*.md
+npm test                 # 39 deterministic unit tests, no network
+npm run test:tap         # the same tests, recorded to tests/results/unit-latest.tap for the dashboard
+npm run test:scenarios   # 22 AI scenarios against the configured provider → tests/results/*.md + *.json
 BASE_URL=https://<deployed-url> npm run test:remote   # post-deployment smoke test
 ```
 
-Three scenario runs on the local model went from 12/19 to 16/19 to 18/19 passing as each run's failures were fixed. Results, failures found and the fixes they led to are documented in [docs/TESTING.md](docs/TESTING.md); prompt iterations in [docs/PROMPT_ENGINEERING.md](docs/PROMPT_ENGINEERING.md).
+Three scenario runs on the local model went from 12/19 to 16/19 to 18/19 passing as each run's failures were fixed; the Classes 8–10 suite (22 scenarios, prompt v2.0) then passed in full across two runs. Results, failures found and the fixes they led to are documented in [docs/TESTING.md](docs/TESTING.md); prompt iterations in [docs/PROMPT_ENGINEERING.md](docs/PROMPT_ENGINEERING.md).
+
+## Quality dashboard
+
+[`reports/dashboard.html`](reports/dashboard.html) is a self-contained page built from recorded files only (`npm run dashboard`, no dependencies): the syllabus the tutor covers, which model answered in every recorded run (so far always the local `qwen2:7b`; the Claude path is not measured live), every scenario in every run across prompt versions, the seven learner behaviours the brief asks to test with their latest status, latency per scenario, the recorded unit-test run, the findings-and-fixes table and screenshots. The running server also serves it at `/reports/dashboard.html`.
 
 ## Syllabus
 
@@ -146,4 +151,4 @@ Streaming replies, persistent progress with Supabase, a teacher view of class-wi
 
 ## Deployment
 
-See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Live URL: _to be added after deployment_.
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Live URL: _to be added after deployment_. The quality dashboard is served by the app at `<live URL>/reports/dashboard.html`.
