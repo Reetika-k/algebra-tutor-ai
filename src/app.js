@@ -12,6 +12,7 @@ const app = express();
 
 app.use(express.json({ limit: "64kb" }));
 app.use(express.static(path.join(here, "public")));
+app.use("/reports", express.static(path.join(here, "reports"))); // the quality dashboard: /reports/dashboard.html (npm run dashboard)
 
 // ---- helpers ----
 const validate = (schema) => (req, res, next) => {

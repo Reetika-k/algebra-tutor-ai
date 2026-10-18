@@ -33,6 +33,7 @@ docker run -p 3000:3000 -e ANTHROPIC_API_KEY=sk-ant-... algebra-tutor-ai
 - [ ] `npm run test:remote` passes against the public URL
 - [ ] Open the URL in two browsers (e.g. Chrome and Safari) and complete the demo flow in `docs/DEMO_SCRIPT.md`
 - [ ] Confirm the key is not visible anywhere in the page source or network responses (the browser only ever talks to `/api/*`)
+- [ ] Open `<public URL>/reports/dashboard.html`: the quality dashboard is served from the repository's `reports/` folder (rebuild it with `npm run dashboard` before deploying so it matches the code)
 
 ## Cost note
 

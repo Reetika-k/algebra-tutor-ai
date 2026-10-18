@@ -1,0 +1,247 @@
+TAP version 13
+# [questions] rejected (two-step/beginner): two-step: "3*x" is not of the form a*x ± b — "Solve: 3x = 12"
+# [questions] rejected (two-step/beginner): duplicate — "Solve: 2x + 5 = 17"
+# [questions] repaired (fractions/advanced): model answer 2.6667 is wrong for "(4x + 3)/2 - (x - 1)/3 = 5"; corrected to 1.9
+# Subtest: evaluate handles arithmetic, brackets, implicit multiplication and unicode operators
+ok 1 - evaluate handles arithmetic, brackets, implicit multiplication and unicode operators
+  ---
+  duration_ms: 1.630166
+  type: 'test'
+  ...
+# Subtest: evaluate rejects unsafe or malformed input
+ok 2 - evaluate rejects unsafe or malformed input
+  ---
+  duration_ms: 0.290125
+  type: 'test'
+  ...
+# Subtest: equationHolds checks a solution against its equation
+ok 3 - equationHolds checks a solution against its equation
+  ---
+  duration_ms: 0.1285
+  type: 'test'
+  ...
+# Subtest: parseStudentAnswer accepts the formats students actually type
+ok 4 - parseStudentAnswer accepts the formats students actually type
+  ---
+  duration_ms: 0.503209
+  type: 'test'
+  ...
+# Subtest: parseStudentAnswer returns null when no single value is clear
+ok 5 - parseStudentAnswer returns null when no single value is clear
+  ---
+  duration_ms: 0.076959
+  type: 'test'
+  ...
+# Subtest: computeVerdict is tolerant to float noise and formats
+ok 6 - computeVerdict is tolerant to float noise and formats
+  ---
+  duration_ms: 0.2
+  type: 'test'
+  ...
+# Subtest: questionProblem detects inconsistent generated questions
+ok 7 - questionProblem detects inconsistent generated questions
+  ---
+  duration_ms: 0.529375
+  type: 'test'
+  ...
+# Subtest: request schemas reject bad input
+ok 8 - request schemas reject bad input
+  ---
+  duration_ms: 2.596292
+  type: 'test'
+  ...
+# Subtest: system prompts contain every layer
+ok 9 - system prompts contain every layer
+  ---
+  duration_ms: 0.22825
+  type: 'test'
+  ...
+# Subtest: revealsAnswer catches explicit answer statements only
+ok 10 - revealsAnswer catches explicit answer statements only
+  ---
+  duration_ms: 0.347292
+  type: 'test'
+  ...
+# Subtest: generateQuestions discards items that fail the self-consistency check
+ok 11 - generateQuestions discards items that fail the self-consistency check
+  ---
+  duration_ms: 1.986209
+  type: 'test'
+  ...
+# Subtest: evaluate: correct answer is recognised without the model grading it
+ok 12 - evaluate: correct answer is recognised without the model grading it
+  ---
+  duration_ms: 0.771417
+  type: 'test'
+  ...
+# Subtest: evaluate: wrong answer on attempt 1 never reveals the answer, even if the model leaks it
+ok 13 - evaluate: wrong answer on attempt 1 never reveals the answer, even if the model leaks it
+  ---
+  duration_ms: 0.239541
+  type: 'test'
+  ...
+# Subtest: evaluate: solution is revealed after the last attempt and in quiz mode
+ok 14 - evaluate: solution is revealed after the last attempt and in quiz mode
+  ---
+  duration_ms: 0.228833
+  type: 'test'
+  ...
+# Subtest: evaluate: unknown question id → 410
+ok 15 - evaluate: unknown question id → 410
+  ---
+  duration_ms: 0.097833
+  type: 'test'
+  ...
+# Subtest: summarize computes strengths and weaknesses deterministically
+ok 16 - summarize computes strengths and weaknesses deterministically
+  ---
+  duration_ms: 0.600208
+  type: 'test'
+  ...
+# Subtest: topicShapeProblem enforces the shape each topic promises
+ok 17 - topicShapeProblem enforces the shape each topic promises
+  ---
+  duration_ms: 0.307
+  type: 'test'
+  ...
+# Subtest: SummaryRequestSchema accepts a partial byTopic record (regression: smoke run 1 returned 400)
+ok 18 - SummaryRequestSchema accepts a partial byTopic record (regression: smoke run 1 returned 400)
+  ---
+  duration_ms: 0.43875
+  type: 'test'
+  ...
+# Subtest: ensureSolution guarantees a revealed solution states x
+ok 19 - ensureSolution guarantees a revealed solution states x
+  ---
+  duration_ms: 0.160708
+  type: 'test'
+  ...
+# Subtest: plainMath converts the LaTeX the model actually produced into plain text
+ok 20 - plainMath converts the LaTeX the model actually produced into plain text
+  ---
+  duration_ms: 0.149167
+  type: 'test'
+  ...
+# Subtest: looksLikeOverride catches blatant role/instruction overrides and leaves maths questions alone
+ok 21 - looksLikeOverride catches blatant role/instruction overrides and leaves maths questions alone
+  ---
+  duration_ms: 0.727375
+  type: 'test'
+  ...
+# Subtest: chat: an override message is answered by the guard without calling the model
+ok 22 - chat: an override message is answered by the guard without calling the model
+  ---
+  duration_ms: 0.096375
+  type: 'test'
+  ...
+# Subtest: answersMatch tolerates two-decimal rounding but not wrong values
+ok 23 - answersMatch tolerates two-decimal rounding but not wrong values
+  ---
+  duration_ms: 0.026041
+  type: 'test'
+  ...
+# Subtest: questionProblem accepts a 4-decimal answer for a fraction result and unicode ÷
+ok 24 - questionProblem accepts a 4-decimal answer for a fraction result and unicode ÷
+  ---
+  duration_ms: 0.0695
+  type: 'test'
+  ...
+# Subtest: summarize: the app, not the model, chooses the next topic
+ok 25 - summarize: the app, not the model, chooses the next topic
+  ---
+  duration_ms: 0.122167
+  type: 'test'
+  ...
+# Subtest: solveLinear solves linear equations exactly and refuses non-linear or degenerate ones
+ok 26 - solveLinear solves linear equations exactly and refuses non-linear or degenerate ones
+  ---
+  duration_ms: 0.102
+  type: 'test'
+  ...
+# Subtest: extractEquation strips the 'Solve:' prefix and trailing punctuation
+ok 27 - extractEquation strips the 'Solve:' prefix and trailing punctuation
+  ---
+  duration_ms: 0.022916
+  type: 'test'
+  ...
+# Subtest: checkQuestion repairs wrong answers for equation topics but never for word problems
+ok 28 - checkQuestion repairs wrong answers for equation topics but never for word problems
+  ---
+  duration_ms: 0.131375
+  type: 'test'
+  ...
+# Subtest: generateQuestions stores the corrected answer and safe steps for a repaired question
+ok 29 - generateQuestions stores the corrected answer and safe steps for a repaired question
+  ---
+  duration_ms: 0.247959
+  type: 'test'
+  ...
+# Subtest: the LaTeX rule reaches the model with real backslashes (template-literal escape regression)
+ok 30 - the LaTeX rule reaches the model with real backslashes (template-literal escape regression)
+  ---
+  duration_ms: 0.033625
+  type: 'test'
+  ...
+# Subtest: trimHistory drops leading assistant turns so the API always starts with a user message
+ok 31 - trimHistory drops leading assistant turns so the API always starts with a user message
+  ---
+  duration_ms: 0.037375
+  type: 'test'
+  ...
+# Subtest: extractEquation also handles 'Find x:' prompts
+ok 32 - extractEquation also handles 'Find x:' prompts
+  ---
+  duration_ms: 0.038417
+  type: 'test'
+  ...
+# Subtest: chat history may contain long tutor replies, but learner messages stay capped
+ok 33 - chat history may contain long tutor replies, but learner messages stay capped
+  ---
+  duration_ms: 0.079666
+  type: 'test'
+  ...
+# Subtest: checkQuestion requires whole-number solutions below advanced level
+ok 34 - checkQuestion requires whole-number solutions below advanced level
+  ---
+  duration_ms: 0.062917
+  type: 'test'
+  ...
+# Subtest: Class 9/10 solvers: system, quadratic, y for a given x
+ok 35 - Class 9/10 solvers: system, quadratic, y for a given x
+  ---
+  duration_ms: 0.387708
+  type: 'test'
+  ...
+# Subtest: pair and root parsing accept the forms students type
+ok 36 - pair and root parsing accept the forms students type
+  ---
+  duration_ms: 0.353416
+  type: 'test'
+  ...
+# Subtest: verdicts for pairs, any-solution and roots (including partial)
+ok 37 - verdicts for pairs, any-solution and roots (including partial)
+  ---
+  duration_ms: 0.126167
+  type: 'test'
+  ...
+# Subtest: checkQuestion for Class 9/10 kinds: prompt is ground truth, wrong model answers repaired, word problems only checked
+ok 38 - checkQuestion for Class 9/10 kinds: prompt is ground truth, wrong model answers repaired, word problems only checked
+  ---
+  duration_ms: 0.502708
+  type: 'test'
+  ...
+# Subtest: formatTruth and revealsTruth cover every answer type
+ok 39 - formatTruth and revealsTruth cover every answer type
+  ---
+  duration_ms: 0.497625
+  type: 'test'
+  ...
+1..39
+# tests 39
+# suites 0
+# pass 39
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 320.312917
