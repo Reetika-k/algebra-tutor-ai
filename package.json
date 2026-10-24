@@ -12,7 +12,8 @@
     "dashboard": "node scripts/build-dashboard.mjs",
     "test:scenarios": "node tests/scenarios.mjs",
     "test:remote": "node tests/smoke-remote.mjs",
-    "test:e2e": "node tests/e2e-browser.mjs"
+    "test:e2e": "node tests/e2e-browser.mjs",
+    "submission": "node scripts/build-submission.mjs"
   },
   "engines": {
     "node": ">=20"
