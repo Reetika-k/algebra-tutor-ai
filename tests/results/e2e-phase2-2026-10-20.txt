@@ -1,0 +1,24 @@
+# Browser e2e, enhancement Phase 2 (UI foundation), 2026-10-20
+# node tests/e2e-browser.mjs http://localhost:3010 ; server: PORT=3010 LLM_PROVIDER=ollama (qwen2:7b), headless Chrome 155
+
+PASS  shareable link opens Practice tab — Local model · qwen2:7b
+PASS  progress panel shows learner
+PASS  New question button present
+PASS  question generated and rendered — Solve: 4x + 3 = 19 (23s)
+PASS  wrong answer → 'Not yet' with hint and attempts left — NOT YET · 2 ATTEMPTS LEFT Your answer is not correct yet. Let's break it down step by step. You have the equation 4x + 3 = 19. First, you need to isolate the te
+PASS  direct-answer request → hint, no solution — I NEED AN ANSWER It's great that you're asking for help! Remember, solving equations is like finding a treasure. We need to isolate the variable to find its val
+PASS  third wrong answer → solution revealed — NOT YET Your answer is not correct yet. Let's break it down step by step. You have the equation 4x + 3 = 19. The first step is to isolate the term with the vari
+PASS  'Next question' offered after reveal
+PASS  progress counts attempted 1 / correct 0
+PASS  needs-practice lists the topic
+PASS  Start quiz button present
+PASS  quiz shows 'Question 1 of N' — Question 1 of 4 (54s)
+PASS  quiz reveals solution after one attempt — NOT YET Your answer is not correct yet. Let's break it down step by step. You have the equation 2x - 7 = 9. First, you need to move the constant to the other si
+PASS  'Next question' offered in quiz
+PASS  summary shows attempted/correct and next lesson — Today's performance Questions attempted: 2 · Correct: 0 Needs improvement: Two-step equations Recommended next lesson: Two-step equations Asha, you're starting 
+PASS  Learn opener rendered as plain text — Hello Asha! I'm glad you're here. Let's start with the basics of two-step equations, which are equations that require tw… (20s)
+PASS  override attempt answered by the guard — I'm your algebra tutor, so I'll stay with equations from your syllabus. Would you like an explanation, a practice question, or help with a specific equation?
+PASS  no JavaScript errors in the page
+
+18 / 18 UI checks passed
+exit 0

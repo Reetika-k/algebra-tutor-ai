@@ -1,0 +1,20 @@
+# Browser e2e, enhancement Phase 6 (final code), width 1440, 2026-10-23, run 3
+# E2E_WIDTH=1440 node tests/e2e-browser.mjs http://localhost:3010 ; server: PORT=3010 LLM_PROVIDER=ollama (qwen2:7b), headless Chrome 155; load before: load averages: 12.60 66.96 60.79
+
+viewport width 1440
+PASS  shareable link opens Practice tab — Local model · qwen2:7b
+PASS  progress panel shows learner
+PASS  New question button present
+PASS  question generated and rendered — Solve: 3x + 5 = 20 (27s)
+PASS  Hint button present before answering
+PASS  hint card shows 'Hint 1 of 2' and no answer — HINT 1 OF 2 the idea Which number is added to or taken away from the x term? Undo that first, on both sides.
+PASS  wrong answer → 'Not yet' with hint and attempts left — NOT YET · 2 ATTEMPTS LEFT It looks like you might have subtracted 1 from 1000 instead of subtracting 5 from 1000. Remember, you need to undo the addition of 5 t
+PASS  working shown in the student's message and cleared from the box
+PASS  feedback hint moves to the next step after the button hint — next step — Subtract 5 from both sides of the equation. next step
+PASS  direct-answer request → hint, no solution — I NEED AN ANSWER You're on the right track, but remember, the goal is to find the value of x. When you subtract 5 from both sides, you're aiming to isolate the 
+…DevTools command timed out; reconnecting
+…DevTools connection dropped; reconnecting to the tab
+FAIL  flow completed without exception — timeout waiting for feedback 4
+PASS  no JavaScript errors in the page
+
+11 / 12 UI checks passed

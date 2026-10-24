@@ -1,247 +1,549 @@
 TAP version 13
+# Subtest: publicError maps every kind to a fixed message and unknown kinds to the provider message
+ok 1 - publicError maps every kind to a fixed message and unknown kinds to the provider message
+  ---
+  duration_ms: 1196.011417
+  type: 'test'
+  ...
+# Subtest: model down: chat, questions and summary fail with a public message, never the model address
+ok 2 - model down: chat, questions and summary fail with a public message, never the model address
+  ---
+  duration_ms: 623.848
+  type: 'test'
+  ...
+# Subtest: health reports the model as unreachable without exposing its address
+ok 3 - health reports the model as unreachable without exposing its address
+  ---
+  duration_ms: 27.014708
+  type: 'test'
+  ...
+# Subtest: model down: app-only features still work (recommendations, worked examples)
+ok 4 - model down: app-only features still work (recommendations, worked examples)
+  ---
+  duration_ms: 82.900292
+  type: 'test'
+  ...
+# Subtest: expired or unknown questions return 410 for both answers and hints
+ok 5 - expired or unknown questions return 410 for both answers and hints
+  ---
+  duration_ms: 47.615666
+  type: 'test'
+  ...
+# Subtest: bad JSON and unknown routes get short, safe errors
+ok 6 - bad JSON and unknown routes get short, safe errors
+  ---
+  duration_ms: 63.42225
+  type: 'test'
+  ...
 # [questions] rejected (two-step/beginner): two-step: "3*x" is not of the form a*x ± b — "Solve: 3x = 12"
 # [questions] rejected (two-step/beginner): duplicate — "Solve: 2x + 5 = 17"
 # [questions] repaired (fractions/advanced): model answer 2.6667 is wrong for "(4x + 3)/2 - (x - 1)/3 = 5"; corrected to 1.9
+# [questions] rejected (two-step/beginner): two-step: "3*x" is not of the form a*x ± b — "Solve: 3x = 12"
+# [questions] rejected (two-step/beginner): two-step: "3*x" is not of the form a*x ± b — "Solve: 3x = 12"
 # Subtest: evaluate handles arithmetic, brackets, implicit multiplication and unicode operators
-ok 1 - evaluate handles arithmetic, brackets, implicit multiplication and unicode operators
+ok 7 - evaluate handles arithmetic, brackets, implicit multiplication and unicode operators
   ---
-  duration_ms: 1.630166
+  duration_ms: 10.664166
   type: 'test'
   ...
 # Subtest: evaluate rejects unsafe or malformed input
-ok 2 - evaluate rejects unsafe or malformed input
+ok 8 - evaluate rejects unsafe or malformed input
   ---
-  duration_ms: 0.290125
+  duration_ms: 1.205666
   type: 'test'
   ...
 # Subtest: equationHolds checks a solution against its equation
-ok 3 - equationHolds checks a solution against its equation
+ok 9 - equationHolds checks a solution against its equation
   ---
-  duration_ms: 0.1285
+  duration_ms: 0.607958
   type: 'test'
   ...
 # Subtest: parseStudentAnswer accepts the formats students actually type
-ok 4 - parseStudentAnswer accepts the formats students actually type
+ok 10 - parseStudentAnswer accepts the formats students actually type
   ---
-  duration_ms: 0.503209
+  duration_ms: 2.112
   type: 'test'
   ...
 # Subtest: parseStudentAnswer returns null when no single value is clear
-ok 5 - parseStudentAnswer returns null when no single value is clear
+ok 11 - parseStudentAnswer returns null when no single value is clear
   ---
-  duration_ms: 0.076959
+  duration_ms: 0.4395
   type: 'test'
   ...
 # Subtest: computeVerdict is tolerant to float noise and formats
-ok 6 - computeVerdict is tolerant to float noise and formats
+ok 12 - computeVerdict is tolerant to float noise and formats
   ---
-  duration_ms: 0.2
+  duration_ms: 0.676833
   type: 'test'
   ...
 # Subtest: questionProblem detects inconsistent generated questions
-ok 7 - questionProblem detects inconsistent generated questions
+ok 13 - questionProblem detects inconsistent generated questions
   ---
-  duration_ms: 0.529375
+  duration_ms: 4.287667
   type: 'test'
   ...
 # Subtest: request schemas reject bad input
-ok 8 - request schemas reject bad input
+ok 14 - request schemas reject bad input
   ---
-  duration_ms: 2.596292
+  duration_ms: 10.038084
   type: 'test'
   ...
 # Subtest: system prompts contain every layer
-ok 9 - system prompts contain every layer
+ok 15 - system prompts contain every layer
   ---
-  duration_ms: 0.22825
+  duration_ms: 1.312584
   type: 'test'
   ...
 # Subtest: revealsAnswer catches explicit answer statements only
-ok 10 - revealsAnswer catches explicit answer statements only
+ok 16 - revealsAnswer catches explicit answer statements only
   ---
-  duration_ms: 0.347292
+  duration_ms: 1.884459
   type: 'test'
   ...
 # Subtest: generateQuestions discards items that fail the self-consistency check
-ok 11 - generateQuestions discards items that fail the self-consistency check
+ok 17 - generateQuestions discards items that fail the self-consistency check
   ---
-  duration_ms: 1.986209
+  duration_ms: 10.337959
   type: 'test'
   ...
 # Subtest: evaluate: correct answer is recognised without the model grading it
-ok 12 - evaluate: correct answer is recognised without the model grading it
+ok 18 - evaluate: correct answer is recognised without the model grading it
   ---
-  duration_ms: 0.771417
+  duration_ms: 8.845292
   type: 'test'
   ...
 # Subtest: evaluate: wrong answer on attempt 1 never reveals the answer, even if the model leaks it
-ok 13 - evaluate: wrong answer on attempt 1 never reveals the answer, even if the model leaks it
+ok 19 - evaluate: wrong answer on attempt 1 never reveals the answer, even if the model leaks it
   ---
-  duration_ms: 0.239541
+  duration_ms: 2.186958
   type: 'test'
   ...
 # Subtest: evaluate: solution is revealed after the last attempt and in quiz mode
-ok 14 - evaluate: solution is revealed after the last attempt and in quiz mode
+ok 20 - evaluate: solution is revealed after the last attempt and in quiz mode
   ---
-  duration_ms: 0.228833
+  duration_ms: 3.652333
   type: 'test'
   ...
 # Subtest: evaluate: unknown question id → 410
-ok 15 - evaluate: unknown question id → 410
+ok 21 - evaluate: unknown question id → 410
   ---
-  duration_ms: 0.097833
+  duration_ms: 0.884208
   type: 'test'
   ...
 # Subtest: summarize computes strengths and weaknesses deterministically
-ok 16 - summarize computes strengths and weaknesses deterministically
+ok 22 - summarize computes strengths and weaknesses deterministically
   ---
-  duration_ms: 0.600208
+  duration_ms: 13.876541
   type: 'test'
   ...
 # Subtest: topicShapeProblem enforces the shape each topic promises
-ok 17 - topicShapeProblem enforces the shape each topic promises
+ok 23 - topicShapeProblem enforces the shape each topic promises
   ---
-  duration_ms: 0.307
+  duration_ms: 2.129875
   type: 'test'
   ...
 # Subtest: SummaryRequestSchema accepts a partial byTopic record (regression: smoke run 1 returned 400)
-ok 18 - SummaryRequestSchema accepts a partial byTopic record (regression: smoke run 1 returned 400)
+ok 24 - SummaryRequestSchema accepts a partial byTopic record (regression: smoke run 1 returned 400)
   ---
-  duration_ms: 0.43875
+  duration_ms: 4.402875
   type: 'test'
   ...
 # Subtest: ensureSolution guarantees a revealed solution states x
-ok 19 - ensureSolution guarantees a revealed solution states x
+ok 25 - ensureSolution guarantees a revealed solution states x
   ---
-  duration_ms: 0.160708
+  duration_ms: 1.24725
   type: 'test'
   ...
 # Subtest: plainMath converts the LaTeX the model actually produced into plain text
-ok 20 - plainMath converts the LaTeX the model actually produced into plain text
+ok 26 - plainMath converts the LaTeX the model actually produced into plain text
   ---
-  duration_ms: 0.149167
+  duration_ms: 10.307125
   type: 'test'
   ...
 # Subtest: looksLikeOverride catches blatant role/instruction overrides and leaves maths questions alone
-ok 21 - looksLikeOverride catches blatant role/instruction overrides and leaves maths questions alone
+ok 27 - looksLikeOverride catches blatant role/instruction overrides and leaves maths questions alone
   ---
-  duration_ms: 0.727375
+  duration_ms: 7.330083
   type: 'test'
   ...
 # Subtest: chat: an override message is answered by the guard without calling the model
-ok 22 - chat: an override message is answered by the guard without calling the model
+ok 28 - chat: an override message is answered by the guard without calling the model
   ---
-  duration_ms: 0.096375
+  duration_ms: 1.169292
   type: 'test'
   ...
 # Subtest: answersMatch tolerates two-decimal rounding but not wrong values
-ok 23 - answersMatch tolerates two-decimal rounding but not wrong values
+ok 29 - answersMatch tolerates two-decimal rounding but not wrong values
   ---
-  duration_ms: 0.026041
+  duration_ms: 0.33725
   type: 'test'
   ...
 # Subtest: questionProblem accepts a 4-decimal answer for a fraction result and unicode ÷
-ok 24 - questionProblem accepts a 4-decimal answer for a fraction result and unicode ÷
+ok 30 - questionProblem accepts a 4-decimal answer for a fraction result and unicode ÷
   ---
-  duration_ms: 0.0695
+  duration_ms: 1.021875
   type: 'test'
   ...
 # Subtest: summarize: the app, not the model, chooses the next topic
-ok 25 - summarize: the app, not the model, chooses the next topic
+ok 31 - summarize: the app, not the model, chooses the next topic
   ---
-  duration_ms: 0.122167
+  duration_ms: 2.926791
   type: 'test'
   ...
 # Subtest: solveLinear solves linear equations exactly and refuses non-linear or degenerate ones
-ok 26 - solveLinear solves linear equations exactly and refuses non-linear or degenerate ones
+ok 32 - solveLinear solves linear equations exactly and refuses non-linear or degenerate ones
   ---
-  duration_ms: 0.102
+  duration_ms: 1.279834
   type: 'test'
   ...
 # Subtest: extractEquation strips the 'Solve:' prefix and trailing punctuation
-ok 27 - extractEquation strips the 'Solve:' prefix and trailing punctuation
+ok 33 - extractEquation strips the 'Solve:' prefix and trailing punctuation
   ---
-  duration_ms: 0.022916
+  duration_ms: 0.332458
   type: 'test'
   ...
 # Subtest: checkQuestion repairs wrong answers for equation topics but never for word problems
-ok 28 - checkQuestion repairs wrong answers for equation topics but never for word problems
+ok 34 - checkQuestion repairs wrong answers for equation topics but never for word problems
   ---
-  duration_ms: 0.131375
+  duration_ms: 4.380666
   type: 'test'
   ...
 # Subtest: generateQuestions stores the corrected answer and safe steps for a repaired question
-ok 29 - generateQuestions stores the corrected answer and safe steps for a repaired question
+ok 35 - generateQuestions stores the corrected answer and safe steps for a repaired question
   ---
-  duration_ms: 0.247959
+  duration_ms: 5.572375
   type: 'test'
   ...
 # Subtest: the LaTeX rule reaches the model with real backslashes (template-literal escape regression)
-ok 30 - the LaTeX rule reaches the model with real backslashes (template-literal escape regression)
+ok 36 - the LaTeX rule reaches the model with real backslashes (template-literal escape regression)
   ---
-  duration_ms: 0.033625
+  duration_ms: 0.532125
   type: 'test'
   ...
 # Subtest: trimHistory drops leading assistant turns so the API always starts with a user message
-ok 31 - trimHistory drops leading assistant turns so the API always starts with a user message
+ok 37 - trimHistory drops leading assistant turns so the API always starts with a user message
   ---
-  duration_ms: 0.037375
+  duration_ms: 0.41775
   type: 'test'
   ...
 # Subtest: extractEquation also handles 'Find x:' prompts
-ok 32 - extractEquation also handles 'Find x:' prompts
+ok 38 - extractEquation also handles 'Find x:' prompts
   ---
-  duration_ms: 0.038417
+  duration_ms: 0.560125
   type: 'test'
   ...
 # Subtest: chat history may contain long tutor replies, but learner messages stay capped
-ok 33 - chat history may contain long tutor replies, but learner messages stay capped
+ok 39 - chat history may contain long tutor replies, but learner messages stay capped
   ---
-  duration_ms: 0.079666
+  duration_ms: 0.927166
   type: 'test'
   ...
 # Subtest: checkQuestion requires whole-number solutions below advanced level
-ok 34 - checkQuestion requires whole-number solutions below advanced level
+ok 40 - checkQuestion requires whole-number solutions below advanced level
   ---
-  duration_ms: 0.062917
+  duration_ms: 0.607583
   type: 'test'
   ...
 # Subtest: Class 9/10 solvers: system, quadratic, y for a given x
-ok 35 - Class 9/10 solvers: system, quadratic, y for a given x
+ok 41 - Class 9/10 solvers: system, quadratic, y for a given x
   ---
-  duration_ms: 0.387708
+  duration_ms: 3.610625
   type: 'test'
   ...
 # Subtest: pair and root parsing accept the forms students type
-ok 36 - pair and root parsing accept the forms students type
+ok 42 - pair and root parsing accept the forms students type
   ---
-  duration_ms: 0.353416
+  duration_ms: 3.006458
   type: 'test'
   ...
 # Subtest: verdicts for pairs, any-solution and roots (including partial)
-ok 37 - verdicts for pairs, any-solution and roots (including partial)
+ok 43 - verdicts for pairs, any-solution and roots (including partial)
   ---
-  duration_ms: 0.126167
+  duration_ms: 0.898875
   type: 'test'
   ...
 # Subtest: checkQuestion for Class 9/10 kinds: prompt is ground truth, wrong model answers repaired, word problems only checked
-ok 38 - checkQuestion for Class 9/10 kinds: prompt is ground truth, wrong model answers repaired, word problems only checked
+ok 44 - checkQuestion for Class 9/10 kinds: prompt is ground truth, wrong model answers repaired, word problems only checked
   ---
-  duration_ms: 0.502708
+  duration_ms: 4.139833
   type: 'test'
   ...
 # Subtest: formatTruth and revealsTruth cover every answer type
-ok 39 - formatTruth and revealsTruth cover every answer type
+ok 45 - formatTruth and revealsTruth cover every answer type
   ---
-  duration_ms: 0.497625
+  duration_ms: 4.32275
   type: 'test'
   ...
-1..39
-# tests 39
+# Subtest: diagnose names each linear pattern when exactly one mistake explains the answer
+ok 46 - diagnose names each linear pattern when exactly one mistake explains the answer
+  ---
+  duration_ms: 3.4695
+  type: 'test'
+  ...
+# Subtest: diagnose never claims a mistake without evidence
+ok 47 - diagnose never claims a mistake without evidence
+  ---
+  duration_ms: 2.509667
+  type: 'test'
+  ...
+# Subtest: diagnose handles pairs and roots
+ok 48 - diagnose handles pairs and roots
+  ---
+  duration_ms: 1.461708
+  type: 'test'
+  ...
+# Subtest: diagnosis text never contains a number, so it cannot leak an answer
+ok 49 - diagnosis text never contains a number, so it cannot leak an answer
+  ---
+  duration_ms: 2.104417
+  type: 'test'
+  ...
+# Subtest: ladder hints: level 1 is the idea, level 2 the concrete step, neither states the answer
+ok 50 - ladder hints: level 1 is the idea, level 2 the concrete step, neither states the answer
+  ---
+  duration_ms: 20.112208
+  type: 'test'
+  ...
+# Subtest: sameHint treats rewordings with the same words as repeats
+ok 51 - sameHint treats rewordings with the same words as repeats
+  ---
+  duration_ms: 0.4685
+  type: 'test'
+  ...
+# Subtest: evaluate: the app's diagnosis and hint level reach the model and the response
+ok 52 - evaluate: the app's diagnosis and hint level reach the model and the response
+  ---
+  duration_ms: 3.567583
+  type: 'test'
+  ...
+# Subtest: evaluate: hint level climbs with attempts and with hints already shown; reveal is level 3
+ok 53 - evaluate: hint level climbs with attempts and with hints already shown; reveal is level 3
+  ---
+  duration_ms: 6.3755
+  type: 'test'
+  ...
+# Subtest: evaluate: a repeated hint is replaced by the app's next ladder hint
+ok 54 - evaluate: a repeated hint is replaced by the app's next ladder hint
+  ---
+  duration_ms: 4.039083
+  type: 'test'
+  ...
+# Subtest: evaluate: working is quoted to the model; an override attempt in it is dropped
+ok 55 - evaluate: working is quoted to the model; an override attempt in it is dropped
+  ---
+  duration_ms: 2.681958
+  type: 'test'
+  ...
+# Subtest: hint(): app-only ladder hint, no model call, 410 for an unknown question
+ok 56 - hint(): app-only ladder hint, no model call, 410 for an unknown question
+  ---
+  duration_ms: 11.530542
+  type: 'test'
+  ...
+# Subtest: Phase 3 request fields are optional and bounded
+ok 57 - Phase 3 request fields are optional and bounded
+  ---
+  duration_ms: 3.847875
+  type: 'test'
+  ...
+# Subtest: feedback prompt carries the hint ladder and the no-certainty rule
+ok 58 - feedback prompt carries the hint ladder and the no-certainty rule
+  ---
+  duration_ms: 0.32975
+  type: 'test'
+  ...
+# Subtest: evaluate: a repeat padded with filler is caught and replaced by the next step not yet given
+ok 59 - evaluate: a repeat padded with filler is caught and replaced by the next step not yet given
+  ---
+  duration_ms: 15.085792
+  type: 'test'
+  ...
+# Subtest: evaluate: a level-1 hint with numbers in it is replaced by the app's idea hint
+ok 60 - evaluate: a level-1 hint with numbers in it is replaced by the app's idea hint
+  ---
+  duration_ms: 1.35525
+  type: 'test'
+  ...
+# Subtest: sameHint: one hint containing most of the other's words is a repeat
+ok 61 - sameHint: one hint containing most of the other's words is a repeat
+  ---
+  duration_ms: 0.411375
+  type: 'test'
+  ...
+# Subtest: dropGuesses removes invented mistakes and asks for the steps
+ok 62 - dropGuesses removes invented mistakes and asks for the steps
+  ---
+  duration_ms: 0.527209
+  type: 'test'
+  ...
+# Subtest: evaluate: guesses are removed only when the app has no evidence
+ok 63 - evaluate: guesses are removed only when the app has no evidence
+  ---
+  duration_ms: 1.266875
+  type: 'test'
+  ...
+# Subtest: dropGuesses after the reveal points to the worked solution instead of the working box
+ok 64 - dropGuesses after the reveal points to the worked solution instead of the working box
+  ---
+  duration_ms: 1.087917
+  type: 'test'
+  ...
+# Subtest: dropGuesses on an unclear answer removes guesses without claiming to look for a mistake
+ok 65 - dropGuesses on an unclear answer removes guesses without claiming to look for a mistake
+  ---
+  duration_ms: 0.409
+  type: 'test'
+  ...
+# Subtest: topicStatus thresholds: under 3 answers, under 50 %, 4+ answers at 80 %
+ok 66 - topicStatus thresholds: under 3 answers, under 50 %, 4+ answers at 80 %
+  ---
+  duration_ms: 0.223125
+  type: 'test'
+  ...
+# Subtest: recommend: struggling topic with a weak prerequisite → review the prerequisite
+ok 67 - recommend: struggling topic with a weak prerequisite → review the prerequisite
+  ---
+  duration_ms: 0.541875
+  type: 'test'
+  ...
+# Subtest: recommend: struggling topic, prerequisite secure or unpractised → same topic, easier questions
+ok 68 - recommend: struggling topic, prerequisite secure or unpractised → same topic, easier questions
+  ---
+  duration_ms: 0.583709
+  type: 'test'
+  ...
+# Subtest: recommend: the weakest struggling topic is chosen first
+ok 69 - recommend: the weakest struggling topic is chosen first
+  ---
+  duration_ms: 0.595875
+  type: 'test'
+  ...
+# Subtest: recommend: mastered → harder questions, then the next topic after 8 answers
+ok 70 - recommend: mastered → harder questions, then the next topic after 8 answers
+  ---
+  duration_ms: 0.52175
+  type: 'test'
+  ...
+# Subtest: recommend: not enough data and developing both keep the current topic
+ok 71 - recommend: not enough data and developing both keep the current topic
+  ---
+  duration_ms: 0.749042
+  type: 'test'
+  ...
+# Subtest: recommend: only syllabus topics, and the reason quotes the student's own numbers
+ok 72 - recommend: only syllabus topics, and the reason quotes the student's own numbers
+  ---
+  duration_ms: 0.5055
+  type: 'test'
+  ...
+# Subtest: every prerequisite is a syllabus topic that comes earlier
+ok 73 - every prerequisite is a syllabus topic that comes earlier
+  ---
+  duration_ms: 0.362875
+  type: 'test'
+  ...
+# Subtest: summarize: reason, adaptation and today's counts from the session
+ok 74 - summarize: reason, adaptation and today's counts from the session
+  ---
+  duration_ms: 3.770459
+  type: 'test'
+  ...
+# Subtest: difficulty bias reaches the question prompt; normal adds nothing
+ok 75 - difficulty bias reaches the question prompt; normal adds nothing
+  ---
+  duration_ms: 0.621166
+  type: 'test'
+  ...
+# Subtest: Phase 4 request fields: bias defaults to normal, topics must be 2–5 distinct syllabus ids
+ok 76 - Phase 4 request fields: bias defaults to normal, topics must be 2–5 distinct syllabus ids
+  ---
+  duration_ms: 12.326834
+  type: 'test'
+  ...
+# Subtest: generateQuestions with topics: spread over the topics, each checked against its own topic, interleaved
+ok 77 - generateQuestions with topics: spread over the topics, each checked against its own topic, interleaved
+  ---
+  duration_ms: 2.325917
+  type: 'test'
+  ...
+# Subtest: generateQuestions with topics: a topic that fails is skipped, the rest still make a quiz
+ok 78 - generateQuestions with topics: a topic that fails is skipped, the rest still make a quiz
+  ---
+  duration_ms: 1.173208
+  type: 'test'
+  ...
+# Subtest: progress: a v1 record migrates once to v2 with its totals as an 'earlier' history row
+ok 79 - progress: a v1 record migrates once to v2 with its totals as an 'earlier' history row
+  ---
+  duration_ms: 8.07775
+  type: 'test'
+  ...
+# Subtest: progress: record() updates saved totals and this session's history row; caps hold
+ok 80 - progress: record() updates saved totals and this session's history row; caps hold
+  ---
+  duration_ms: 3.29925
+  type: 'test'
+  ...
+# Subtest: progress: corrupt or hostile records load as safe, empty-ish data
+ok 81 - progress: corrupt or hostile records load as safe, empty-ish data
+  ---
+  duration_ms: 2.90975
+  type: 'test'
+  ...
+# Subtest: steps: 2x + 4 = 12 → 2x = 8 → x = 4, with the operation named
+ok 82 - steps: 2x + 4 = 12 → 2x = 8 → x = 4, with the operation named
+  ---
+  duration_ms: 0.581833
+  type: 'test'
+  ...
+# Subtest: steps: negatives, both sides, x on the right, brackets and fractions
+ok 83 - steps: negatives, both sides, x on the right, brackets and fractions
+  ---
+  duration_ms: 2.05225
+  type: 'test'
+  ...
+# Subtest: steps: every line has the same root as the original equation
+ok 84 - steps: every line has the same root as the original equation
+  ---
+  duration_ms: 1.827042
+  type: 'test'
+  ...
+# Subtest: steps: unsupported or degenerate forms return null instead of guessing
+ok 85 - steps: unsupported or degenerate forms return null instead of guessing
+  ---
+  duration_ms: 0.447792
+  type: 'test'
+  ...
+# Subtest: steps formatting helpers
+ok 86 - steps formatting helpers
+  ---
+  duration_ms: 0.212292
+  type: 'test'
+  ...
+# Subtest: steps for questions: Class 8 equation topics only; examples come from the topic's own list
+ok 87 - steps for questions: Class 8 equation topics only; examples come from the topic's own list
+  ---
+  duration_ms: 2.021709
+  type: 'test'
+  ...
+# Subtest: evaluate: steps arrive only with the reveal, never before
+ok 88 - evaluate: steps arrive only with the reveal, never before
+  ---
+  duration_ms: 2.098833
+  type: 'test'
+  ...
+# Subtest: checkQuestion: an equation-topic question with a missing answer is solved and repaired, not rejected
+ok 89 - checkQuestion: an equation-topic question with a missing answer is solved and repaired, not rejected
+  ---
+  duration_ms: 2.000541
+  type: 'test'
+  ...
+1..89
+# tests 89
 # suites 0
-# pass 39
+# pass 89
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 320.312917
+# duration_ms 2908.132541

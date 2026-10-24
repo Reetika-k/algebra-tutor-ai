@@ -3,110 +3,174 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f4f6fb">
+  <meta name="theme-color" content="#f6f7fb">
   <title>AlgebraTutor AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Icon sprite: inline SVG, stroke follows currentColor -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-learn" viewBox="0 0 24 24"><path d="M2.5 5.5c0-.8.7-1.5 1.5-1.5h5a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5H4A1.5 1.5 0 0 1 2.5 16z"/><path d="M21.5 5.5c0-.8-.7-1.5-1.5-1.5h-5a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5H20a1.5 1.5 0 0 0 1.5-1.5z"/></symbol>
+      <symbol id="i-practice" viewBox="0 0 24 24"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7.5 18.5l-4 1 1-4z"/><path d="M14.5 5.5l3 3"/></symbol>
+      <symbol id="i-quiz" viewBox="0 0 24 24"><path d="M10 6h10M10 12h10M10 18h10"/><path d="M3.5 6l1.5 1.5L7.5 5M3.5 12l1.5 1.5 2.5-2.5M3.5 18l1.5 1.5 2.5-2.5"/></symbol>
+      <symbol id="i-doubt" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.6L3.5 20.5l1.4-4.7A8.5 8.5 0 1 1 21 11.5z"/><path d="M10 9.3a2.2 2.2 0 1 1 3 2c-.6.3-1 .8-1 1.4v.4"/><circle cx="12" cy="15.9" r=".7" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+      <symbol id="i-hint" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.1v.1h5v-.1c0-.8.4-1.6 1.1-2.1A6 6 0 0 0 12 3z"/></symbol>
+      <symbol id="i-solution" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+      <symbol id="i-send" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3.5 20h17"/><path d="M7 16.5v-5M12 16.5V6.5M17 16.5v-8"/></symbol>
+      <symbol id="i-restart" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1L3.5 8.5"/><path d="M3.5 3.5v5h5"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.5l9.5 16.5h-19z"/><path d="M12 10v4.2"/><circle cx="12" cy="17.2" r=".8" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+      <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></symbol>
+    </defs>
+  </svg>
+
   <header class="topbar">
     <div class="brand">
       <span class="logo" aria-hidden="true">x</span>
       <span class="brand-text">
         <span class="brand-title">AlgebraTutor AI</span>
-        <span class="brand-sub">Classes 8–10 · Equations (NCERT / CBSE / RBSE)</span>
+        <span class="brand-sub">Classes 8–10 · Equations · NCERT / CBSE / RBSE</span>
       </span>
     </div>
     <div class="topbar-right">
-      <span id="provider-badge" class="status" title="LLM provider in use">…</span>
-      <button id="reset" class="btn-ghost" type="button">Start over</button>
+      <span id="provider-badge" class="status" title="Language model in use">…</span>
+      <button id="open-progress" class="btn-ghost hidden" type="button"><svg class="ic" aria-hidden="true"><use href="#i-chart"/></svg><span>My progress</span></button>
+      <button id="reset" class="btn-ghost" type="button"><svg class="ic" aria-hidden="true"><use href="#i-restart"/></svg><span>Start over</span></button>
     </div>
   </header>
 
-  <!-- Step 1: personalization (name, level, topic) -->
+  <div id="provider-banner" class="banner provider-banner hidden" role="status">
+    <svg class="ic" aria-hidden="true"><use href="#i-alert"/></svg>
+    <span id="provider-text"></span>
+    <button id="provider-check" class="btn-ghost retry" type="button">Check again</button>
+  </div>
+
+  <!-- Step 1: personalization (name, level, class and topic) -->
   <main id="setup" class="setup">
     <section class="hero">
-      <p class="eyebrow">Personalized learning assistant · Classes 8, 9 and 10</p>
-      <h1>A tutor that explains, checks your answers and adapts to you.</h1>
-      <ul class="props">
-        <li><span class="prop-icon">📖</span><span><strong>Learn</strong> a topic step by step with worked examples.</span></li>
-        <li><span class="prop-icon">✏️</span><span><strong>Practice</strong> fresh questions with hints before answers.</span></li>
-        <li><span class="prop-icon">🏁</span><span><strong>Quiz</strong> yourself and get a recommendation for what to study next.</span></li>
-        <li><span class="prop-icon">📚</span><span><strong>Syllabus</strong>: linear equations (Class 8), two-variable equations (Class 9), pairs of equations and quadratics (Class 10).</span></li>
+      <p class="eyebrow">Personal algebra tutor · Classes 8, 9 and 10</p>
+      <h1>Understand every step of solving an equation.</h1>
+      <p class="lede">Explanations pitched at your level, fresh practice questions with hints before answers, and a clear next step after every session.</p>
+      <ul class="modes-strip">
+        <li><span class="mode-ic"><svg class="ic" aria-hidden="true"><use href="#i-learn"/></svg></span><span><strong>Learn</strong><small>A topic step by step, with worked examples.</small></span></li>
+        <li><span class="mode-ic"><svg class="ic" aria-hidden="true"><use href="#i-practice"/></svg></span><span><strong>Practice</strong><small>New questions, three attempts, hints first.</small></span></li>
+        <li><span class="mode-ic"><svg class="ic" aria-hidden="true"><use href="#i-quiz"/></svg></span><span><strong>Quiz</strong><small>Five questions, then a recommendation.</small></span></li>
+        <li><span class="mode-ic"><svg class="ic" aria-hidden="true"><use href="#i-doubt"/></svg></span><span><strong>Ask a doubt</strong><small>Any question about the chapter.</small></span></li>
       </ul>
+      <div class="syllabus">
+        <span class="syllabus-label"><svg class="ic" aria-hidden="true"><use href="#i-layers"/></svg>Syllabus</span>
+        <span class="chip">Class 8 · Linear equations in one variable</span>
+        <span class="chip">Class 9 · Linear equations in two variables</span>
+        <span class="chip">Class 10 · Pair of linear equations</span>
+        <span class="chip">Class 10 · Quadratic equations</span>
+      </div>
     </section>
 
-    <form id="setup-form" class="setup-card">
+    <form id="setup-form" class="setup-card" novalidate>
+      <h2 class="card-heading">Set up your session</h2>
       <div class="step">
-        <span class="step-num">1</span>
-        <label class="field" for="name"><span class="label">Your name</span>
-          <input id="name" name="name" maxlength="40" required placeholder="e.g. Asha" autocomplete="off">
-        </label>
+        <span class="step-num" aria-hidden="true">1</span>
+        <label class="field" for="name"><span class="label">Your name</span></label>
+        <input id="name" name="name" maxlength="40" placeholder="e.g. Asha" autocomplete="off" aria-describedby="name-error">
+        <p id="name-error" class="field-error hidden" role="alert">Enter your name so the tutor can greet you.</p>
       </div>
 
       <div class="step" role="radiogroup" aria-labelledby="lbl-level">
-        <span class="step-num">2</span>
+        <span class="step-num" aria-hidden="true">2</span>
         <span class="label" id="lbl-level">Your current level</span>
         <div class="level-grid">
           <label class="choice"><input type="radio" name="level" value="beginner" checked>
-            <span class="choice-body"><strong>Beginner</strong><small>New to equations. Small numbers, every step explained.</small></span></label>
+            <span class="choice-body"><strong>Beginner</strong><small>Small numbers, every step explained.</small></span></label>
           <label class="choice"><input type="radio" name="level" value="intermediate">
-            <span class="choice-body"><strong>Intermediate</strong><small>Know the basics. Negatives, one hint at a time.</small></span></label>
+            <span class="choice-body"><strong>Intermediate</strong><small>Negatives, one hint at a time.</small></span></label>
           <label class="choice"><input type="radio" name="level" value="advanced">
-            <span class="choice-body"><strong>Advanced</strong><small>Confident. Fractions, brackets, fewer hints.</small></span></label>
+            <span class="choice-body"><strong>Advanced</strong><small>Fractions, brackets, fewer hints.</small></span></label>
         </div>
       </div>
 
       <div class="step" role="radiogroup" aria-labelledby="lbl-topic">
-        <span class="step-num">3</span>
-        <span class="label" id="lbl-topic">Class and topic</span>
+        <span class="step-num" aria-hidden="true">3</span>
+        <span class="label" id="lbl-topic">Where do you want to start?</span>
+        <p class="step-help">Pick your class, then a starting topic. You can switch topics any time from the workspace.</p>
         <div id="class-tabs" class="class-tabs" role="tablist" aria-label="Class"></div>
         <div id="topic-grid" class="topic-grid"></div>
+        <p id="topic-note" class="step-help topic-note"></p>
       </div>
 
       <button type="submit" class="btn btn-primary btn-lg">Start learning</button>
-      <p class="fineprint">Your progress is saved in this browser only.</p>
+      <p class="fineprint">Your progress is saved in this browser only. No account needed.</p>
     </form>
   </main>
 
-  <!-- Step 2: tutor -->
+  <!-- Step 2: tutor workspace -->
   <main id="app" class="app hidden">
-    <section class="tutor-panel" aria-label="Tutor">
-      <nav class="tabs" id="tabs" aria-label="Learning modes">
-        <button data-mode="learn" class="active"><span class="tab-icon">📖</span><span>Learn</span></button>
-        <button data-mode="practice"><span class="tab-icon">✏️</span><span>Practice</span></button>
-        <button data-mode="quiz"><span class="tab-icon">🏁</span><span>Quiz</span></button>
-        <button data-mode="doubt"><span class="tab-icon">💬</span><span>Ask a Doubt</span></button>
+    <section class="workspace" aria-label="Tutor">
+      <header class="ws-head">
+        <div class="learner-chip">
+          <span id="learner-initial" class="avatar" aria-hidden="true">A</span>
+          <span class="learner-text">
+            <span class="learner-hi">Hi, <span id="learner-name"></span></span>
+            <span id="learner-level" class="pill"></span>
+          </span>
+        </div>
+        <div class="head-right">
+          <button id="bias-chip" class="bias-chip hidden" type="button" title="Questions on this topic are being made easier or harder, as recommended. Click to return to normal."><span id="bias-text"></span><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg><span class="sr-only">Back to normal difficulty</span></button>
+          <label class="topic-chip"><span class="label-sm">Topic</span><select id="topic-switch" aria-label="Topic"></select></label>
+        </div>
+      </header>
+
+      <nav class="segmented" id="tabs" aria-label="Learning modes">
+        <button type="button" data-mode="learn" class="active"><svg class="ic" aria-hidden="true"><use href="#i-learn"/></svg><span>Learn</span></button>
+        <button type="button" data-mode="practice"><svg class="ic" aria-hidden="true"><use href="#i-practice"/></svg><span>Practice</span></button>
+        <button type="button" data-mode="quiz"><svg class="ic" aria-hidden="true"><use href="#i-quiz"/></svg><span>Quiz</span></button>
+        <button type="button" data-mode="doubt"><svg class="ic" aria-hidden="true"><use href="#i-doubt"/></svg><span>Ask a Doubt</span></button>
       </nav>
       <p id="mode-desc" class="mode-desc"></p>
+
+      <div id="error-banner" class="banner hidden" role="alert">
+        <svg class="ic" aria-hidden="true"><use href="#i-alert"/></svg>
+        <span id="error-text"></span>
+        <button id="error-retry" class="btn-ghost retry hidden" type="button">Try again</button>
+        <button id="error-close" class="icon-btn" type="button" aria-label="Dismiss message"><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg></button>
+      </div>
+
       <div id="chat" class="chat" aria-live="polite"></div>
+      <section id="mix-picker" class="mix-picker hidden" aria-labelledby="mix-title">
+        <div class="mix-head"><h3 id="mix-title">Mixed revision quiz</h3><span id="mix-count" class="muted"></span></div>
+        <p class="step-help">Pick 2 to 5 topics. The 5 questions are spread across them, and each answer counts towards its own topic.</p>
+        <div id="mix-list" class="mix-list"></div>
+        <p id="mix-note" class="field-error" role="status"></p>
+        <div class="mix-actions"><button id="mix-start" class="btn btn-primary" type="button">Start mixed quiz</button><button id="mix-cancel" class="btn-ghost" type="button">Cancel</button></div>
+      </section>
       <div id="actions" class="actions"></div>
-      <form id="composer" class="composer">
-        <input id="message" autocomplete="off" maxlength="1000" placeholder="Type your message…" aria-label="Message">
-        <button id="send" type="submit" class="btn btn-primary">Send <span aria-hidden="true">↑</span></button>
+      <details id="working-box" class="working hidden">
+        <summary><svg class="ic" aria-hidden="true"><use href="#i-practice"/></svg>Show your working <span class="muted">(optional, helps the tutor find a mistake)</span></summary>
+        <textarea id="working" maxlength="600" rows="3" placeholder="One step per line, for example&#10;2x = 20 - 6&#10;2x = 14" aria-label="Your working"></textarea>
+      </details>
+      <form id="composer" class="composer" novalidate>
+        <div class="composer-field">
+          <input id="message" autocomplete="off" maxlength="1000" placeholder="Type your message…" aria-label="Message" aria-describedby="composer-note">
+          <p id="composer-note" class="field-error hidden" role="status"></p>
+        </div>
+        <button id="send" type="submit" class="btn btn-primary"><span id="send-label">Send</span><svg class="ic" aria-hidden="true"><use id="send-icon" href="#i-send"/></svg></button>
       </form>
     </section>
 
     <aside class="rail" aria-label="Your session">
       <button id="rail-toggle" class="rail-toggle" type="button" aria-expanded="false">
-        <span>Your session</span><span class="rail-mini"><strong id="mini-attempted">0</strong> attempted · <strong id="mini-correct">0</strong> correct</span><span class="chev" aria-hidden="true">▾</span>
+        <span>Session progress</span><span class="rail-mini"><strong id="mini-attempted">0</strong> attempted · <strong id="mini-correct">0</strong> correct</span><svg class="ic chev" aria-hidden="true"><use href="#i-chevron"/></svg>
       </button>
       <div class="rail-body">
-        <section class="card session">
-          <div class="session-head">
-            <div class="avatar big" aria-hidden="true">AT</div>
-            <div>
-              <h3>Hi, <span id="learner-name"></span></h3>
-              <span id="learner-level" class="pill"></span>
-            </div>
-          </div>
-          <label class="field compact"><span class="label">Topic</span><select id="topic-switch"></select></label>
-        </section>
-
         <section class="card progress">
-          <h4 class="card-title">Progress</h4>
+          <h4 class="card-title">This session</h4>
           <div class="ring-row">
             <div class="ring" aria-hidden="true">
               <svg viewBox="0 0 36 36"><circle class="ring-bg" cx="18" cy="18" r="15.9"/><circle id="acc-ring" class="ring-fg" cx="18" cy="18" r="15.9"/></svg>
@@ -119,8 +183,8 @@
           </div>
           <div id="topic-stats" class="topic-stats"></div>
           <div class="areas">
-            <div><h5>Strong areas</h5><ul id="strong" class="tags"><li class="muted">none yet</li></ul></div>
-            <div><h5>Needs practice</h5><ul id="weak" class="tags"><li class="muted">none yet</li></ul></div>
+            <div><h5>Going well today</h5><ul id="strong" class="tags"><li class="muted">none yet</li></ul></div>
+            <div><h5>To revisit today</h5><ul id="weak" class="tags"><li class="muted">none yet</li></ul></div>
           </div>
           <button id="end-session" class="btn btn-secondary" type="button">End session &amp; get recommendation</button>
           <div id="summary" class="summary hidden"></div>
@@ -129,6 +193,20 @@
     </aside>
   </main>
 
+  <!-- Student progress dashboard (learner-facing; the developer dashboard is /reports/dashboard.html) -->
+  <dialog id="progress-dialog" class="dash" aria-labelledby="dash-title">
+    <div class="dash-head">
+      <div>
+        <p class="eyebrow">Student dashboard</p>
+        <h2 id="dash-title">Your progress</h2>
+      </div>
+      <button id="dash-close" class="icon-btn" type="button" aria-label="Close dashboard"><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div id="dash-body" class="dash-body"></div>
+    <p class="fineprint">Saved in this browser only. "Start over" clears it.</p>
+  </dialog>
+
+  <script src="progress.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,35 @@
+{
+  "provider": "ollama",
+  "model": "qwen2:7b",
+  "promptVersion": "2.2",
+  "appVersion": "0.3.0",
+  "results": [
+    {
+      "id": "S25",
+      "category": "Summary with reason and adaptation",
+      "action": "stats: two-step 1/4 and one-step 1/3 saved; session two-step 1/2",
+      "expected": "Next = One-step (weak prerequisite), adaptation 'prerequisite', reason quotes 1 of 4; today's counts 2/1; message names the plan without contradicting it",
+      "status": "PASS",
+      "actual": "next=one-step adaptation=prerequisite today=2/1\nreason: You got 1 of 4 right first time on Two-step equations, and One-step equations, which it builds on, is not secure yet (1 of 3), so review One-step equations first.\nmessage: Asha, today's session focused on two-step equations. You managed to solve 2 out of 4 correctly. It's clear that you're still getting the hang of these, particularly when dealing with equations that require two steps to solve. Your strong areas are yet to be identified, but your performance on two-step equations suggests that you might benefit from a review of one-step equations first. The app recommends this because you've only managed to correctly solve one out of three one-step equations, which is a prerequisite for mastering two-step equations. Your mistake in solving '2x + 5 = 17' was writing 'x = 11' instead of 'x = 6'. Remember, when solving for 'x', you need to isolate 'x' on one side of the equation. Practice isolating 'x' in one-step equations before moving on to two-step equations. This will help solidify your understanding and improve your skills.\ntips: [\"Start with one-step equations. Focus on isolating 'x' by performing the same operation on both sides of the equation.\",\"Practice regularly. The more you practice, the better you'll get at solving equations.\",\"Check your work. Always double-check your solutions by substituting 'x' back into the original equation to ensure it holds true.\"]",
+      "ms": 74411
+    },
+    {
+      "id": "S26",
+      "category": "Mixed revision quiz generation",
+      "action": "generate 4 questions over one-step + fractions + system-solve (beginner)",
+      "expected": "Questions from every topic that produced a usable one, each passing its own topic's check and graded against it",
+      "status": "FAIL",
+      "actual": "threw: fetch failed",
+      "ms": 304318
+    },
+    {
+      "id": "S19",
+      "category": "Session summary",
+      "action": "stats: one-step 4/4, fractions 3/1, mistakes listed",
+      "expected": "Needs-practice = fractions; next lesson = fractions; message + tips present",
+      "status": "PASS",
+      "actual": "{\n \"status\": 200,\n \"attempted\": 7,\n \"correct\": 5,\n \"strengths\": [\n  \"One-step equations\"\n ],\n \"needsPractice\": [\n  \"Equations with fractions\"\n ],\n \"nextTopicId\": \"fractions\",\n \"nextLesson\": \"Equations with fractions\",\n \"reason\": \"You got 1 of 3 right first time on Equations with fractions, so practise it with easier questions; if they still feel hard, review Two-step equations first.\",\n \"adaptation\": \"ease\",\n \"difficultyBias\": \"easier\",\n \"insufficientData\": [],\n \"message\": \"Asha, you've done well with one-step equations and are making progress with equations involving fractions. It seems you might have overlooked the importance of finding a common denominator when solving equations with fractions. For 'x/3 + 2 = 5', you need to isolate x by first subtracting 2 from both sides, then multiplying by 3. This gives you x = 9. Remember, when dealing with fractions, it's crucial to perform the same operation on both sides of the equation to maintain balance. Practicing with easier questions on equations with fractions will help you build confidence and improve your skills. If you find these still challenging, reviewing two-step equations could be beneficial as it will reinforce your understanding of solving equations with multiple operations. Keep practicing and don't hesitate to ask if you need further explanations or examples. You're making great strides in algebra, Asha! Keep up the good work.\",\n \"tips\": [\n  \"Always check your work by substituting the solution back into the original equation.\",\n  \"When solving equations with fractions, find a common denominator if necessary to simplify the process.\",\n  \"Remember to perform operations on both sides of the equation to maintain equality.\"\n ],\n \"model\": \"qwen2:7b\"\n}",
+      "ms": 105595
+    }
+  ]
+}

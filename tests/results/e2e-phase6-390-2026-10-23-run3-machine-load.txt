@@ -1,0 +1,20 @@
+# Browser e2e, enhancement Phase 6 (final code), width 390, 2026-10-23, run 3
+# E2E_WIDTH=390 node tests/e2e-browser.mjs http://localhost:3010 ; server: PORT=3010 LLM_PROVIDER=ollama (qwen2:7b), headless Chrome 155; load before: load averages: 9.36 32.75 46.74
+
+viewport width 390
+PASS  shareable link opens Practice tab — Local model · qwen2:7b
+PASS  progress panel shows learner
+PASS  New question button present
+PASS  question generated and rendered — Solve: 4x + 2 = 18 (38s)
+PASS  Hint button present before answering
+PASS  hint card shows 'Hint 1 of 2' and no answer — HINT 1 OF 2 the idea Which number is added to or taken away from the x term? Undo that first, on both sides.
+PASS  wrong answer → 'Not yet' with hint and attempts left — NOT YET · 2 ATTEMPTS LEFT You've taken the wrong first step. It looks like you subtracted 1 from 1000, but the equation is 4x + 2 = 18. You should first focus o
+PASS  working shown in the student's message and cleared from the box
+PASS  feedback hint moves to the next step after the button hint — next step — Subtract 2 from both sides of the equation to isolate the term with x. This will help you find the v
+PASS  direct-answer request → hint, no solution — I NEED AN ANSWER You're on the right track, but remember, you need to show your steps. To find the value of x, you should subtract 2 from both sides of the equa
+…DevTools command timed out; reconnecting
+…DevTools connection dropped; reconnecting to the tab
+FAIL  flow completed without exception — timeout waiting for feedback 4
+PASS  no JavaScript errors in the page
+
+11 / 12 UI checks passed

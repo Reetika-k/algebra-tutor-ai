@@ -1,0 +1,8 @@
+# Setup form checks, 2026-10-20 (after the 'Where do you want to start?' change)
+PASS  default starting topic is first of Class 8
+PASS  note names the default topic — Not sure? Keep "One-step equations". It is where Class 8 begins.
+PASS  empty name blocked with inline error
+PASS  Class 9 tab pre-selects its first topic and updates note — Not sure? Keep "Find y for a given x". It is where Class 9 begins.
+PASS  submit opens workspace with chosen topic
+PASS  no page errors
+6 / 6 setup checks passed

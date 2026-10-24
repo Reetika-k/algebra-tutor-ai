@@ -1,0 +1,27 @@
+# Browser e2e, enhancement Phase 3, run 2 (after extending the guess guard to unclear answers), 2026-10-20
+# node tests/e2e-browser.mjs http://localhost:3010 ; server: PORT=3010 LLM_PROVIDER=ollama (qwen2:7b), headless Chrome 155
+
+PASS  shareable link opens Practice tab — Local model · qwen2:7b
+PASS  progress panel shows learner
+PASS  New question button present
+PASS  question generated and rendered — Solve: 4x + 3 = 19 (23s)
+PASS  Hint button present before answering
+PASS  hint card shows 'Hint 1 of 2' and no answer — HINT 1 OF 2 the idea Which number is added to or taken away from the x term? Undo that first, on both sides.
+PASS  wrong answer → 'Not yet' with hint and attempts left — NOT YET · 2 ATTEMPTS LEFT It looks like you might have subtracted 1 from 1000 instead of subtracting 3 from both sides of the equation. Remember, you need to is
+PASS  working shown in the student's message and cleared from the box
+PASS  feedback hint moves to the next step after the button hint — next step — Subtract 3 from both sides of the equation 4x + 3 = 19. next step
+PASS  direct-answer request → hint, no solution — I NEED AN ANSWER You've asked for the answer, but remember, it's more important to understand how to solve the equation. Let's focus on the steps. First, you ne
+PASS  third wrong answer → solution revealed — NOT YET Remember, your goal is to isolate the variable 'x' on one side of the equation. First, you need to subtract 3 from both sides of the equation 4x + 3 = 1
+PASS  'Next question' offered after reveal
+PASS  progress counts attempted 1 / correct 0
+PASS  needs-practice lists the topic
+PASS  Start quiz button present
+PASS  quiz shows 'Question 1 of N' — Question 1 of 5 (99s)
+PASS  quiz reveals solution after one attempt — NOT YET When solving the equation 2x - 7 = 9, you need to isolate x. Remember to perform the same operation on both sides of the equation. Can you show me your 
+PASS  'Next question' offered in quiz
+PASS  summary shows attempted/correct and next lesson — Today's performance Questions attempted: 2 · Correct: 0 Needs improvement: Two-step equations Recommended next lesson: Two-step equations Asha, you've been prac
+PASS  Learn opener rendered as plain text — Hello Asha! I'm glad you're here to learn about two-step equations. Let's start with the main idea: solving equations th… (29s)
+PASS  override attempt answered by the guard — I'm your algebra tutor, so I'll stay with equations from your syllabus. Would you like an explanation, a practice question, or help with a specific equation?
+PASS  no JavaScript errors in the page
+
+22 / 22 UI checks passed

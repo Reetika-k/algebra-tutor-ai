@@ -1,0 +1,28 @@
+# Browser e2e, enhancement Phase 6 (final code), width 1440, 2026-10-23
+# E2E_WIDTH=1440 node tests/e2e-browser.mjs http://localhost:3010 ; server: PORT=3010 LLM_PROVIDER=ollama (qwen2:7b), headless Chrome 155
+
+viewport width 1440
+PASS  shareable link opens Practice tab — Local model · qwen2:7b
+PASS  progress panel shows learner
+PASS  New question button present
+PASS  question generated and rendered — Solve: 3x + 2 = 14 (53s)
+PASS  Hint button present before answering
+PASS  hint card shows 'Hint 1 of 2' and no answer — HINT 1 OF 2 the idea Which number is added to or taken away from the x term? Undo that first, on both sides.
+PASS  wrong answer → 'Not yet' with hint and attempts left — NOT YET · 2 ATTEMPTS LEFT You've subtracted 1 from 1000 instead of subtracting 2 from 1000. Remember, you need to undo the addition of 2 to the x term. Start by
+PASS  working shown in the student's message and cleared from the box
+PASS  feedback hint moves to the next step after the button hint — next step — Subtract 2 from both sides of the equation to isolate the term with x. This will give you 3x = 1380.
+PASS  direct-answer request → hint, no solution — I NEED AN ANSWER You're on the right track! The first step is to subtract 2 from both sides of the equation. This will help isolate the term with x. Once you've
+PASS  third wrong answer → solution revealed — NOT YET When you subtract 2 from both sides of the equation 3x + 2 = 14, you should get 3x = 12, not 3x = 1380. Let's correct that step and see what value of x 
+PASS  'Next question' offered after reveal
+PASS  reveal includes verified steps whose last line matches the solution — ["3x + 2 = 14","3x = 12","x = 4"]
+PASS  Next step moves the balance scale on
+PASS  progress counts attempted 1 / correct 0
+PASS  needs-practice lists the topic
+PASS  Mixed revision picker opens with the current topic ticked
+PASS  Start quiz button present
+…DevTools command timed out; reconnecting
+…DevTools connection dropped; reconnecting to the tab
+FAIL  flow completed without exception — timeout waiting for quiz question 1
+PASS  no JavaScript errors in the page
+
+19 / 20 UI checks passed

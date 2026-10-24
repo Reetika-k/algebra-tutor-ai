@@ -1,0 +1,16 @@
+PASS  shareable link opens Practice tab — Local model · qwen2:7b
+PASS  progress panel shows learner
+PASS  New question button present
+PASS  question generated and rendered — Solve: 2x + 3 = 11 (91s)
+PASS  wrong answer → 'Not yet' with hint and attempts left — NOT YET · 2 ATTEMPTS LEFT Your answer is not correct yet. Let's break it down step by step. You have 2x + 3 = 11. First, you need to isolate the term with x. To
+PASS  direct-answer request → hint, no solution — I NEED AN ANSWER It's great that you're asking for help! Remember, solving equations is like finding a treasure. You need to follow a map step by step. For the 
+PASS  third wrong answer → solution revealed — NOT YET Your answer is not correct yet. Let's break it down step by step. You have the equation 2x + 3 = 11. The first step is to isolate the term with the vari
+PASS  'Next question' offered after reveal
+PASS  progress counts attempted 1 / correct 0
+PASS  needs-practice lists the topic
+PASS  Start quiz button present
+…DevTools connection dropped; reconnecting to the tab
+FAIL  flow completed without exception — timeout waiting for quiz question 1
+PASS  no JavaScript errors in the page
+
+12 / 13 UI checks passed

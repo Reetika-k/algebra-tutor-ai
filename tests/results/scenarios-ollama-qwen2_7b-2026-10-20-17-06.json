@@ -1,0 +1,26 @@
+{
+  "provider": "ollama",
+  "model": "qwen2:7b",
+  "promptVersion": "2.1",
+  "appVersion": "0.3.0",
+  "results": [
+    {
+      "id": "S23",
+      "category": "Mistake diagnosis (deterministic) + no leak",
+      "action": "two-step/beginner: generate 1; answer with the value a known mistake produces (sign kept when moving the constant, or the first unambiguous pattern)",
+      "expected": "Diagnosis names that pattern as likely; feedback and hint do not state the answer; nothing revealed",
+      "status": "PASS",
+      "actual": "Solve: 2x + 3 = 11 [x = 4] answered x = 7 (sign_transpose)\ndiagnosis={\"code\":\"sign_transpose\",\"label\":\"A sign was not changed when a term moved across =\",\"confidence\":\"likely\",\"explanation\":\"When a term moves to the other side of the equals sign, its sign changes: plus becomes minus and minus becomes plus.\"} leak=false\nfeedback: It looks like you might have forgotten to change the sign when moving the constant term across the equals sign. When you move a term from one side of the equation to the other, you need to change its sign. For example, if you move +3 to the other side, it becomes -3. Let's try solving it again, keeping this in mind.\nhint: First, you need to isolate the term with the variable (x) on one side of the equation. To do this, you should subtract 3 from both sides of the equation. This will help you find the value of x.",
+      "ms": 89506
+    },
+    {
+      "id": "S24",
+      "category": "Hint ladder: two different hints",
+      "action": "two-step/beginner: generate 1; two wrong answers far from any pattern, sending the first hint back as previousHints",
+      "expected": "Hint level 1 then 2; second hint is not a repeat of the first; nothing revealed",
+      "status": "PASS",
+      "actual": "Solve: 4x + 3 = 19\nhint 1 (level 1): Subtract 3 from both sides of the equation to start isolating x.\nhint 2 (level 2): Subtract 3 from both sides of the equation to start isolating x. This will help you find the value of x.",
+      "ms": 78220
+    }
+  ]
+}

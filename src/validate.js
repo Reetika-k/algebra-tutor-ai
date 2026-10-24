@@ -28,10 +28,17 @@ export const ChatRequestSchema = z.object({
   messages: z.array(MessageSchema).min(1).max(config.limits.maxHistoryMessages),
 });
 
+export const DIFFICULTY_BIASES = ["easier", "normal", "harder"];
+
 export const QuestionsRequestSchema = z.object({
   profile: ProfileSchema,
   count: z.number().int().min(1).max(5).default(1),
   avoid: z.array(z.string().max(300)).max(20).default([]),
+  // Phase 4 (additive, optional): difficulty within the level, and 2–5 topics for a mixed revision quiz.
+  difficultyBias: z.enum(DIFFICULTY_BIASES).default("normal"),
+  topics: z.array(z.enum(TOPIC_IDS)).min(2).max(5)
+    .refine((ids) => new Set(ids).size === ids.length, { message: "topics must not repeat" })
+    .optional(),
 });
 
 export const EvaluateRequestSchema = z.object({
@@ -40,10 +47,38 @@ export const EvaluateRequestSchema = z.object({
   questionId: z.string().min(1).max(64),
   studentAnswer: z.string().trim().min(1).max(config.limits.maxAnswerChars),
   attempt: z.number().int().min(1).max(3),
+  // Phase 3 (additive, optional): the student's working, and the hints already shown for this question.
+  working: z.string().trim().max(config.limits.maxWorkingChars).optional(),
+  previousHints: z.array(z.string().max(400)).max(3).optional(),
+});
+
+// Phase 5: worked example for Learn, chosen from the topic's own example equations (never student-typed).
+export const StepsRequestSchema = z.object({
+  profile: ProfileSchema,
+  index: z.number().int().min(0).max(9).default(0),
+});
+
+export const HintRequestSchema = z.object({
+  profile: ProfileSchema,
+  questionId: z.string().min(1).max(64),
+  level: z.number().int().min(1).max(2),
+});
+
+const ByTopicSchema = z.partialRecord(
+  z.enum(TOPIC_IDS),
+  z.object({ attempted: z.number().int().min(0), correct: z.number().int().min(0) }),
+);
+
+// Phase 4: deterministic recommendation for the student dashboard (no model call).
+export const RecommendRequestSchema = z.object({
+  profile: ProfileSchema,
+  stats: z.object({ byTopic: ByTopicSchema }),
 });
 
 export const SummaryRequestSchema = z.object({
   profile: ProfileSchema,
+  // Phase 4 (optional): this session's counts for "Today's performance"; `stats` holds all saved answers.
+  session: z.object({ byTopic: ByTopicSchema }).optional(),
   stats: z.object({
     // partialRecord: a session usually touches only some topics (z.record over an enum would demand every key)
     byTopic: z.partialRecord(
@@ -300,11 +335,13 @@ export function checkQuestion(q, topicId = null, { requireInteger = false } = {}
 
   switch (kind) {
     case "equation": {
-      if (!Number.isFinite(q.answer)) return bad("answer is not a finite number");
+      // The prompt is the ground truth, so a missing model answer is repaired like a wrong one
+      // (found in the Phase 6 full run: "Solve: 4x - 5 = 11" was rejected only because the answer field was empty).
       if (!eqText) return bad("prompt does not contain a solvable equation");
       const root = solveLinear(eqText);
       if (root === null) return bad(`prompt equation "${eqText}" is not a linear equation with one solution`);
       if (requireInteger && !isInt(root)) return bad(`solution of "${eqText}" is ${fmt(root)}, not a whole number (required at this level)`);
+      if (!Number.isFinite(q.answer)) return good({ type: "number", value: root }, true, `model gave no answer for "${eqText}"; solved as ${fmt(root)}`);
       if (answersMatch(q.answer, root, 1e-3)) return good({ type: "number", value: q.answer });
       return good({ type: "number", value: root }, true, `model answer ${q.answer} is wrong for "${eqText}"; corrected to ${fmt(root)}`);
     }

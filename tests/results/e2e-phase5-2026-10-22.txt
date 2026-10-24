@@ -1,0 +1,33 @@
+# Browser e2e, enhancement Phase 5 (verified steps, balance scale, worked examples), 2026-10-22
+# node tests/e2e-browser.mjs http://localhost:3010 ; server: PORT=3010 LLM_PROVIDER=ollama (qwen2:7b), headless Chrome 155
+
+PASS  shareable link opens Practice tab — Local model · qwen2:7b
+PASS  progress panel shows learner
+PASS  New question button present
+PASS  question generated and rendered — Solve: 2x + 3 = 11 (22s)
+PASS  Hint button present before answering
+PASS  hint card shows 'Hint 1 of 2' and no answer — HINT 1 OF 2 the idea Which number is added to or taken away from the x term? Undo that first, on both sides.
+PASS  wrong answer → 'Not yet' with hint and attempts left — NOT YET · 2 ATTEMPTS LEFT You're on the right track, but it looks like you might have made a small mistake in your first step. When you're solving an equation l
+PASS  working shown in the student's message and cleared from the box
+PASS  feedback hint moves to the next step after the button hint — next step — Subtract 3 from both sides of the equation. This will help isolate the term with the variable x. Rem
+PASS  direct-answer request → hint, no solution — I NEED AN ANSWER You're on the right track! You need to subtract 3 from both sides of the equation to isolate the term with the variable x. This step will help 
+PASS  third wrong answer → solution revealed — NOT YET When you subtract 3 from both sides of the equation, you should get a new equation that only has the term with x on one side. Let's try this step again.
+PASS  'Next question' offered after reveal
+PASS  reveal includes verified steps whose last line matches the solution — ["2x + 3 = 11","2x = 8","x = 4"]
+PASS  Next step moves the balance scale on
+PASS  progress counts attempted 1 / correct 0
+PASS  needs-practice lists the topic
+PASS  Mixed revision picker opens with the current topic ticked
+PASS  Start quiz button present
+PASS  quiz shows 'Question 1 of N' — Question 1 of 5 (50s)
+PASS  quiz reveals solution after one attempt — NOT YET When solving for x, you need to isolate x on one side of the equation. You should first add 5 to both sides of the equation, and then divide by 4. Let's
+PASS  'Next question' offered in quiz
+PASS  summary shows attempted/correct and next lesson — Today's performance Questions attempted: 2 · Correct: 0 Needs improvement: Two-step equations Recommended next lesson: Two-step equations Not enough data yet Wh
+PASS  dashboard: this session 2 attempted, next step with a reason — YOUR NEXT STEP Two-step equations Not enough data yet Answer at least 3 questions on Two-step equations (2 so far) before I suggest a change. Practise Two-step 
+PASS  Learn opener rendered as plain text — Hello Asha! I'm glad you're here to learn about two-step equations. Let's start with the main idea: solving equations th… (22s)
+PASS  Learn offers a worked example
+PASS  worked example shows the steps to x = … — Solve: 3x + 5 = 20 → x = 5
+PASS  override attempt answered by the guard — I'm your algebra tutor, so I'll stay with equations from your syllabus. Would you like an explanation, a practice question, or help with a specific equation?
+PASS  no JavaScript errors in the page
+
+28 / 28 UI checks passed

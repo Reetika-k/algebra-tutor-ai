@@ -18,5 +18,6 @@ export const config = {
     maxAssistantChars: 8000, // tutor replies echoed back as history
     maxHistoryMessages: 20,
     maxAnswerChars: 100,
+    maxWorkingChars: 600,
   },
 };

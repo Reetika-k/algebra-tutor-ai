@@ -214,3 +214,59 @@ The earlier timeouts did not recur; a direct timing of one Class 10 and one Clas
 **Full 22-scenario suite on prompt v2.0 (2026-10-06): 18 / 22 pass.** All behavioural checks passed: the seven Step-10 learner behaviours (S01–S05, S09, S11) on the new Classes 8–10 persona, the guard and validation checks (S10, S12–S16), generation quality across four Class 8 topics (S17), the summary (S19) and the three new-class scenarios (S20–S22). The four failures were one local-model timeout each: S06–S08 share a single practice question whose generation exceeded the 180 s abort, and S18's generation timed out the same way. Measured generation times during the run were 41–126 s, so the local-model abort was raised to 300 s (Claude requests are unaffected) and the four scenarios were re-run; see the next entry. Report: `tests/results/scenarios-ollama-qwen2_7b-2026-10-06-01-43.md`.
 
 **Re-run of S06–S08 and S18 with the 300 s local-model timeout (2026-10-06): 4 / 4 pass.** Practice flow on `Solve: 4x + 3 = 19`: "just tell me the answer" → unclear with a hint, "x = 100" → incorrect with 2 attempts left and no leak, third wrong answer → solution revealed as "x = 4"; difficulty adaptation produced `4x + 3 = 19` for a beginner and `7x − 12 = 20` (x = 4.571, a fraction allowed only at that level) for an advanced learner. With this, every one of the 22 scenarios has passed on prompt v2.0 across the two runs. Report: `tests/results/scenarios-ollama-qwen2_7b-2026-10-06-01-46.md`.
+
+## 12. Enhancement round (2026-10-19 to 2026-10-23, prompt v2.1–v2.2, app 0.4.0)
+
+Seven phases from the enhancement brief (`docs/ENHANCEMENT_PLAN.md`): UI foundation, mistake diagnosis and hints, recommendations and saved progress, verified steps on a balance scale, and reliability. Every run below used the local `qwen2:7b`; the Claude path is still not measured live.
+
+**Test levels added**
+
+| Level | What | Command |
+|---|---|---|
+| Unit | Diagnosis patterns and no-false-positive cases, hint ladder and repeat detection, recommendation rules, prerequisites, mixed-topic generation, saved-progress migration and caps (the browser script run in a Node sandbox), step generator and root invariance, guess removal | `npm test` |
+| Reliability over HTTP | The app in a child process with the model address pointed at a closed port: public error messages only, health reports the model unreachable, app-only features still work, 410 for expired questions, safe errors for bad JSON | `npm test` (`tests/reliability.test.mjs`) |
+| Browser, full flow | The 18 original checks plus the Hint button, working, verified steps after a reveal, step navigation, mixed-revision picker, student dashboard and the Learn worked example: 28 checks; `E2E_WIDTH=390` runs it at phone width | `npm run test:e2e` |
+| Browser, model unavailable | Banner, plain error with Try again, Try again re-sends, Learn fails cleanly, worked examples and dashboard still work, triple-click sends one request | `node tests/reliability-browser.mjs [width]` |
+| Browser, setup form | Default starting topic, inline name error, class switch, submit | `node tests/setup-check-browser.mjs` |
+
+**Results**
+
+| Run | Result | Record |
+|---|---|---|
+| Unit tests (final) | **89 / 89** (39 before the round) | `tests/results/unit-latest.tap` |
+| Browser baseline before any change (2026-10-19) | 12 / 13; quiz generation exceeded the harness wait (local-model latency) | `e2e-baseline-2026-10-19.txt` |
+| Browser after each phase | Phase 2: 18 / 18 · Phase 3: 16 / 17, then 22 / 22 · Phase 4: 24 / 24 · Phase 5: 28 / 28 | `e2e-phase2…5-*.txt` |
+| Browser reliability, model down | **10 / 10** at 1440 px and at 390 px | `reliability-browser-*-2026-10-23.txt` |
+| Setup form | **6 / 6** | `setup-check-2026-10-20.txt` |
+| New scenarios while building | S23, S24: pass (S24's first pass was false, see R9) · S25: pass · S26: failed on the test client's 300 s limit, then pass | `scenarios-…-2026-10-20-*`, `…-2026-10-22-*` |
+| Full suite, 26 scenarios (2026-10-23) | **20 / 26**: S01 241 words (limit 200); S09 and S11 no usable question (R13); S18, S21, S26 one 300 s model timeout each | `scenarios-ollama-qwen2_7b-2026-10-23-02-49.md` |
+| Re-run of the six failures on the fixed code | **6 / 6** | `scenarios-ollama-qwen2_7b-2026-10-23-04-53.md` |
+
+With the re-run, every one of the 26 scenarios has passed on the final code (S01 passed on the second run at under 200 words: its length is run-to-run variance of the local model, documented rather than tuned away).
+
+**Findings and fixes**
+
+| # | Finding | Fix |
+|---|---|---|
+| R8 | The local model wrote "It looks like you might have added instead of subtracting" when the app's diagnosis was "unknown", and later also for an unclear answer | With no evidence and no working, sentences that guess the mistake are removed and the student is asked for their steps; after a reveal they are pointed to the worked solution |
+| R9 | S24's first run passed, but the second hint was the first sentence again plus filler; the scenario's repeat check compared against the longer hint | Repeat detection by word containment (in the app and the scenario); a repeat is replaced by the next step the app has not given |
+| R10 | A level-1 hint, meant to name only the idea, was a concrete step with numbers | A model-written level-1 hint containing a digit is replaced by the app's idea hint |
+| R11 | The browser kept every mistake, but the summary endpoint accepts at most 30, so a long-used browser would get a 400 at End session | Saved progress v2 caps mistakes and history, normalises corrupt data and migrates v1 once |
+| R12 | A shareable link overwrote saved progress with empty statistics | Saved progress is loaded on every entry path |
+| R13 | Full run, S09: "Solve: 4x - 5 = 11" was rejected only because the model left the answer field empty, although the app solves equation-topic prompts itself | A missing answer is repaired like a wrong one (regression test); seen working in the next browser run ("model gave no answer for 3x + 2 = 14; solved as 4") |
+| R14 | Full run, S26: concurrent per-topic calls queued inside Ollama, which serves one request at a time, and the queue time counted against each call's 300 s limit | Concurrent only with Claude; sequential on the local model; the browser's limit for a mixed quiz scales with the number of topics; the scenario runner uses `node:http` instead of fetch, which gives up at 300 s |
+| R15 | Error replies forwarded provider text to the browser, including the model server's address | Public messages by error kind; details in the server log; tested over HTTP with a closed model port |
+| R16 | A slow model was reported as "cannot reach" | A separate timeout kind and message |
+| R17 | The capstone report's challenges table was damaged: in every copy of the committed file the LaTeX row was cut off mid-row (an earlier editing slip), and the copy kept when the stacked duplicates were removed also lost the dozen rows after it | The rows restored from the copy that still had them; the LaTeX row's ending rebuilt from the README and section 2 |
+
+**Browser runs on the final code (2026-10-23).** The machine was heavily loaded that afternoon: an unrelated video render had been using about two cores for eleven hours, and the load average reached 106. Runs 1 to 3 at both widths stopped on model waits, not on app checks: question or quiz generation, or the fourth answer, took longer than the test's 180 s wait (two model calls also hit the server's 300 s limit and were reported as "took too long"), and in run 3 the DevTools connection itself stalled. Timed directly at a load of 7, the same reveal request took 34 s and returned its three steps, so the code path was sound. All checks that did run in those attempts passed, and no JavaScript errors were reported. Records are kept as `e2e-phase6-*-run1…3-machine-load.txt`.
+
+| Run | Width | Load (1 min) before | Result |
+|---|---|---|---|
+| 4 | 1440 | about 7 | **28 / 28** |
+| 4 | 390 | about 10 | 19 / 20: the five-question quiz took longer than the 180 s wait (`…-run4-quiz-wait.txt`) |
+| 5 | 390 | about 10 | **28 / 28**, quiz question 1 after 92 s |
+
+The test's waits were not lengthened; a heavily loaded laptop running a 7B model is outside what it is meant to measure.
+
+**Limitations of this round's testing.** All AI results are from the local model; Claude may differ in wording and speed. The balance-scale and dashboard screenshots use illustrative content set through the page's own functions; the browser tests exercise the real flow. Difficulty bias is checked for shape and answer, not for whether questions really got easier or harder.
