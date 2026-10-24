@@ -1,6 +1,6 @@
 # Capstone Project Submission Report
 
-Structure follows the 15-section *Project Submission Report template* in the IIT Patna B3 Capstone guidelines.
+Structure follows the 15-section *Project Submission Report template* in the IIT Patna B3 Capstone guidelines. A PDF of this report is in `docs/AlgebraTutor_AI_Capstone_Submission.pdf` (rebuild with `npm run submission`).
 
 ---
 
@@ -13,6 +13,9 @@ Structure follows the 15-section *Project Submission Report template* in the IIT
 | **Mobile number** | 9694228896 |
 | **Project title** | AlgebraTutor AI – AI Tutor: Build a Personalized Learning Assistant (school algebra equations, NCERT Classes 8–10) |
 | **Capstone track** | Project 1: AI Tutor |
+| **Project page** | https://reetika-k.github.io/algebra-tutor-ai/ |
+| **Quality dashboard** | https://reetika-k.github.io/algebra-tutor-ai/reports/dashboard.html |
+| **Repository** | https://github.com/Reetika-k/algebra-tutor-ai |
 
 ## 2. Project overview
 
@@ -85,7 +88,7 @@ Request flow for one practice answer: the browser sends the question id, the stu
 | Category | Used |
 |---|---|
 | AI model | Claude API (`claude-opus-5` by default, configurable); local Ollama `qwen2:7b` for offline development and testing |
-| Development tools | Claude Code (vibe coding), VS Code, Node.js 25, npm |
+| Development tools | AI coding assistant (vibe coding), VS Code, Node.js 25, npm |
 | Backend | Node.js, Express 5, `@anthropic-ai/sdk`, zod, dotenv |
 | Frontend | HTML, CSS, vanilla JavaScript |
 | Testing | `node:test`, custom scenario runner, remote smoke test |
@@ -96,12 +99,24 @@ Request flow for one practice answer: the browser sends the question id, the stu
 
 - Local: `npm install`, set `ANTHROPIC_API_KEY` in `.env`, `npm start`, open http://localhost:3000
 - Offline: `LLM_PROVIDER=ollama npm start` (requires Ollama with `qwen2:7b`)
-- Deployed URL: _(add after deployment – see `docs/DEPLOYMENT.md`)_
+- Online: the project page https://reetika-k.github.io/algebra-tutor-ai/ and the quality dashboard https://reetika-k.github.io/algebra-tutor-ai/reports/dashboard.html. The tutor itself is a Node server that calls a language model, so it runs from a clone (above); hosting it needs a server and an API key (`docs/DEPLOYMENT.md`).
 - Demo flow: `docs/DEMO_SCRIPT.md`
 - Screenshots (headless Chrome, local build): first version `docs/screenshots/01-setup.png`, `02-practice.png`, `03-narrow-quiz.png`; redesigned version `04-setup-desktop.png` (hero + 3-step setup with level and topic cards), `05-practice-desktop.png` (tutor column with session rail), `06-practice-phone.png` (phone layout with collapsible rail), `07-feedback-desktop.png` (question card and wrong-answer feedback with hint), `08-setup-classes.png` (class selector, Classes 8–10)
 - Version 2 screenshots (October 2026): `p2-setup-desktop.png`, `p2-practice-desktop.png`, `p2-practice-phone.png`, `p2-error-validation.png`; `p3-feedback-desktop.png` (likely mistake, hint step, working); `p4-dashboard-desktop.png`, `p4-mixed-picker.png`, `p4-summary-desktop.png`; `p5-reveal-desktop.png`, `p5-learn-desktop.png` (balance scale). Conversation content in these is illustrative; the browser tests exercise the real flow
 - Screens: setup card → workspace with Learn / Practice / Quiz / Ask a Doubt → session panel → student dashboard → summary card
 - Shareable start link for demos: `/?name=Asha&level=beginner&topic=two-step&mode=practice`
+
+![Setup](screenshots/p2-setup-desktop.png)
+*Setup: name, level, class and starting topic across the Class 8–10 equation chapters.*
+
+![Feedback with a likely mistake](screenshots/p3-feedback-desktop.png)
+*Practice feedback: the student's working, the likely mistake the app found (a sign not changed when a term moved across), and the next-step hint.*
+
+![Balance-scale steps](screenshots/p5-reveal-desktop.png)
+*After the reveal: the solution step by step on a balance scale, every line checked by the app.*
+
+![Student dashboard](screenshots/p4-dashboard-desktop.png)
+*Student dashboard: this session and all saved answers, status per topic, and the next step with the reason taken from the student's own numbers.*
 
 ## 10. Prompts used
 
@@ -124,7 +139,7 @@ TASK: Generate practice questions for the current topic and level.
 
 ### 10.3 Building the application (vibe coding)
 
-The application was built with Claude Code from one master prompt (the capstone brief: read the PDF, select a project, extract requirements, design, then implement phase by phase with testing after each phase) followed by incremental instructions. The instructions that shaped the code:
+The application was built with an AI coding assistant from one master prompt (the capstone brief: read the PDF, select a project, extract requirements, design, then implement phase by phase with testing after each phase) followed by incremental instructions. The instructions that shaped the code:
 
 1. "Read the capstone PDF completely, compare the three projects against the goal of demonstrating AI/ML skills, select one, and extract mandatory / recommended / optional requirements with PDF references."
 2. "Phase 1: create a Node.js + Express skeleton with a health endpoint, static page and `.env.example`; run it and smoke-test it before anything else."
@@ -207,5 +222,5 @@ Streaming replies; persistent progress and login (Supabase); teacher dashboard o
 ## 15. Project demo
 
 - Demo script: `docs/DEMO_SCRIPT.md`
-- Public URL: _(add after deployment)_
+- Project page: https://reetika-k.github.io/algebra-tutor-ai/ · quality dashboard: https://reetika-k.github.io/algebra-tutor-ai/reports/dashboard.html · repository: https://github.com/Reetika-k/algebra-tutor-ai
 - Repository: https://github.com/Reetika-k/algebra-tutor-ai

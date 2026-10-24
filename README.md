@@ -4,6 +4,10 @@
 
 Built for the IIT Patna AI/ML capstone, Project 1: *AI Tutor: Build a Personalized Learning Assistant*.
 
+> **Project page:** https://reetika-k.github.io/algebra-tutor-ai/ · **Quality dashboard:** https://reetika-k.github.io/algebra-tutor-ai/reports/dashboard.html · **Repository:** https://github.com/Reetika-k/algebra-tutor-ai
+>
+> **Submission report (PDF):** [docs/AlgebraTutor_AI_Capstone_Submission.pdf](docs/AlgebraTutor_AI_Capstone_Submission.pdf), built from [docs/CAPSTONE_DOCUMENTATION.md](docs/CAPSTONE_DOCUMENTATION.md) with `npm run submission`.
+
 ## Problem statement
 
 Class 8 students usually know the balancing rules for equations but fail at three points: choosing the right first step for a new equation form, sign errors when transposing (especially with brackets and fractions), and turning word problems into equations. Textbook exercises give no feedback until the answer key, tutoring is expensive, and a stuck student looks up the answer instead of getting a hint. The full statement is in [docs/CAPSTONE_DOCUMENTATION.md](docs/CAPSTONE_DOCUMENTATION.md).
