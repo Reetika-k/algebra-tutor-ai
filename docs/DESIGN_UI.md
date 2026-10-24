@@ -1,106 +1,181 @@
 # UI/UX design – AlgebraTutor AI
 
-A senior-designer pass on the working prototype. Backend, prompts and app logic are unchanged; this is presentation, layout, hierarchy and feedback. It shares a visual family with the second capstone project (Equation Catcher): the same orange mark, Fredoka/Nunito type and token scale, on a light, calm surface suited to long study sessions.
+Version 2 (enhancement Phase 2, October 2026). This is a presentation pass only. The API, prompts, grading, solvers and stored data are unchanged. Every element id that the browser test relies on was kept.
 
-## 1. Audit of the first version
+Version 1 shared the orange mark and the Fredoka typeface with Equation Catcher. The enhancement brief asks for a calmer, more professional look for a study tool: light neutral surfaces, navy ink, indigo and violet accents, restrained gradients and no emoji. Section 9 records what changed and why.
+
+## 1. Audit of version 1
 
 | Problem | Why it matters |
 |---|---|
-| Setup is a lone form; nothing explains what the tutor does or why level matters | First impression is "a form", not "a tutor"; no motivation to fill it in |
-| Topic is a plain `<select>` | The seven topics are the syllabus; hidden in a dropdown they cannot be compared or scanned |
-| Chat area is a large empty grey box with one line of text in Practice | Empty state gives no direction; the primary action ("New question") sits far away in a small outline button |
-| Tutor and student messages differ only by alignment and colour | No identity for the tutor; a question card and a feedback card look like ordinary messages |
-| Progress panel: two bare numbers and "none yet" chips | Accuracy, the number that matters, is never shown; per-topic numbers are text rows |
-| Provider badge is raw text ("ollama · qwen2:7b") | Reads as debug output; readiness problems are not visible |
-| On a phone the progress panel pushes the chat below the fold | The chat is the product; the panel should collapse |
+| Orange accent, warm canvas tints and the rounded Fredoka face read as a game | The brief asks for a premium, professional learning product |
+| Emoji as icons (📖 ✏️ 🏁 💬 💡 📝) | They render differently on every device and cannot be styled |
+| Learner name, level and topic sit in the side panel | The workspace header does not say who is studying what |
+| The answer button says "Send" in Practice and Quiz | Answering a question is not chatting; the main action should say what it does |
+| The only waiting state is three bouncing dots | Question generation on the local model can take a minute, with no sign of what is coming |
+| Errors appear as a red chat message that scrolls away | An error is a state of the page, not part of the conversation |
+| Empty input is silently ignored; the name field uses the browser bubble | No inline validation |
+| Yellow focus ring `#ffd166` on white | Contrast about 1.5:1, too faint for keyboard users |
+| No learner-facing view of progress across topics | The brief asks for a student dashboard separate from the developer dashboard |
 
-## 2. Goals and principles
+## 2. Principles
 
-1. **Conversation first.** The chat column is the hero; everything else is secondary and collapsible.
-2. **Teach through hierarchy.** Questions, hints and solutions are distinct cards, not messages; verdicts are colour-coded chips.
-3. **Make progress tangible.** An accuracy ring and per-topic bars, updated after every answer.
-4. **Explain the modes.** Each tab has an icon and a one-line description so a 13-year-old knows what will happen.
-5. **Consistency with the game.** Same mark, type and tokens, so the two capstone projects read as one body of work.
-6. **Accessible by default.** Focus rings, labels, live regions, 44 px targets, reduced motion.
+1. **The workspace is the hero.** The question, the answer field and the feedback carry the page; progress is secondary and collapsible.
+2. **One accent, used for meaning.** Indigo marks actions; the indigo-to-violet gradient is used only for the selected state and the brand mark.
+3. **Feedback is structured.** A verdict chip, a sentence, then a separate hint or solution block, then encouragement.
+4. **Every wait says what it is waiting for.** "Checking your answer", "Preparing your lesson", or a skeleton question card.
+5. **Accessible by default.** Visible focus, labels, live regions, 44 px targets, reduced motion, AA contrast.
 
-## 3. Design system
+## 3. Design system (tokens in `public/styles.css`)
 
-| Token group | Values |
+| Group | Values |
 |---|---|
-| Colour – canvas | `#f4f6fb` with two faint radial tints (indigo, orange) |
-| Colour – surfaces | white, `#f6f8fd`, `#eceff8`; line `#dfe5f1` |
-| Colour – ink | `#1b2340`, `#4b5675`, `#7c86a3` |
-| Colour – primary | indigo `#4353d9` (actions, student bubbles, active tab), `#3242b8` pressed, `#e8ebfb` tint |
-| Colour – accent | orange `#ff7a1a` for the tutor identity (mark, avatar, level pill) |
-| Colour – semantic | success `#1aa36b`, warning `#d98b00`, danger `#e23d4f`, each with a 100-tint for chips and blocks |
-| Type | Fredoka 500–700 for titles, numbers, equations, verdict chips; Nunito 500–800 for text |
-| Spacing | 4 · 8 · 12 · 16 · 20 · 24 |
-| Radius | 10 (inputs, chips) · 16 (cards, bubbles) · 22 (page cards) |
-| Elevation | shadow-1 cards and bubbles; shadow-2 the setup card |
-| Motion | 120 ms buttons, 500 ms ring fill, typing dots; all off under `prefers-reduced-motion` |
+| Canvas and surfaces | `#f6f7fb` canvas with one faint top wash; surfaces white, `#f8f9fc`, `#eef0f6`; lines `#e3e6ef`, `#d3d8e6` |
+| Ink | navy `#1b2340`, `#444d68`, `#646c83` |
+| Primary | indigo `#4f46e5`, pressed `#4338ca`, tints `#f3f4ff` and `#e4e6ff` |
+| Accent | violet `#7c3aed` / `#6d28d9`, tint `#efe9fe`, used for the level pill and the eyebrow labels |
+| Gradient | `#4f46e5 → #7c3aed`; only the brand mark, avatars, the active mode, progress bars and the question rule |
+| Semantic | success `#15803d`, danger `#b91c1c`, warning `#b45309`, each with a light tint for chips and blocks |
+| Type | Nunito 500–900 for everything; weight carries the hierarchy (900 headings, 800 labels, 600 body) |
+| Type scale | 12 · 13.5 · 15.5 · 18 · 22 px, hero 32–46 px |
+| Radius | 8 · 12 · 16 · 20 px, pills 999 px |
+| Elevation | shadow-1 for cards, shadow-2 for the setup card and workspace, shadow-3 for the dashboard dialog |
+| Motion | 150 ms state changes, 500 ms ring fill, thinking dots and skeleton shimmer; all disabled under `prefers-reduced-motion` |
+| Icons | 15 inline SVG symbols in `index.html`, 1.9 px stroke, colour from `currentColor` |
 
-## 4. Layout
+**Font decision.** Fredoka was dropped. One family at several weights looks more consistent and loads one font file family instead of two. No new dependency was added; Nunito was already loaded.
+
+## 4. Layout and breakpoints
+
+| Width | Layout |
+|---|---|
+| Desktop, 1100 px and wider | Setup has two columns: value proposition on the left, form on the right. The workspace sits beside a 340 px progress panel. |
+| Tablet, 720 to 1099 px | One column. The progress panel moves below the workspace. |
+| Phone, under 720 px | One column. The progress panel becomes a one-line toggle above the workspace. The model badge moves to a second top-bar line. Top-bar buttons show icons only. |
 
 ```
-Desktop (> 900 px)                                      Phone (≤ 900 px)
-┌──────────────────────────────────────────────────┐    ┌──────────────────────┐
-│ ⬢ AlgebraTutor AI · subtitle    ● Local model  Start over │    │ ⬢ AlgebraTutor  ● · Start over │
-├───────────────────────────────┬──────────────────┤    ├──────────────────────┤
-│ 📖 Learn ✏️ Practice 🏁 Quiz 💬 │ Hi, Asha  [Beginner] │    │ Your session 3·2  ▾  │  ← collapsible rail
-│ mode description              │ Topic ▾          │    ├──────────────────────┤
-│                               ├──────────────────┤    │ 📖 ✏️ 🏁 💬 tabs      │
-│  AT ▢ tutor message           │ ◔ 67%  3 attempted│    │ mode description     │
-│            student bubble ▢   │        2 correct │    │                      │
-│  AT ▢ QUESTION card           │ topic bars       │    │  chat                │
-│  AT ▢ feedback card           │ strong / needs   │    │                      │
-│ [New question]                │ [End session]    │    │ [actions]            │
-│ [ message…            Send ↑ ]│ summary card     │    │ [ message…   Send ↑ ]│
-└───────────────────────────────┴──────────────────┘    └──────────────────────┘
+Desktop
+┌───────────────────────────────────────────────────────────────┐
+│ [x] AlgebraTutor AI          ● Local model · qwen2:7b  [My progress] [Start over] │
+├──────────────────────────────────────────┬────────────────────┤
+│ (A) Hi, Asha [Beginner]     TOPIC [Two-step ▾] │ THIS SESSION      │
+│ [ Learn | Practice | Quiz | Ask a Doubt ] │ ◔ 71%  7 attempted │
+│ mode description                          │        5 correct   │
+│ [! error banner                        x ]│ topic bars         │
+│ ┃ CLASS 8 · TWO-STEP EQUATIONS            │ strong / needs     │
+│ ┃ Solve for x: 3x + 7 = 22                │ [End session …]    │
+│                               [ x = 9 ]   │ summary card       │
+│ ● NOT YET · 2 ATTEMPTS LEFT …  Hint block │                    │
+│ [Next question]                           │                    │
+│ [ Your answer, e.g. x = 6     ] [Check answer ✓] │             │
+└──────────────────────────────────────────┴────────────────────┘
 ```
-
-Setup is a two-column hero on desktop (value proposition left, numbered 3-step form right: name → level cards → topic cards) and a single column on phones.
 
 ## 5. Components
 
 | Component | Spec |
 |---|---|
-| Top bar | Sticky, translucent; mark + title + subtitle; status pill with a green/amber dot ("Local model · qwen2:7b", "Claude · claude-opus-5", "not configured"); Start over |
-| Level card | Radio card with title and one-line description; selected state = indigo border + tint |
-| Class tabs + topic card | Segmented Class 8 / 9 / 10 tabs filter a 2-column grid of radio cards grouped by NCERT chapter: topic name + example form in display type |
-| Mode tabs | Underline tabs with icons; the active tab's description appears in a strip beneath |
-| Tutor message | Orange "AT" avatar + soft grey bubble; student messages are indigo bubbles on the right |
-| Question card | White card, indigo left rule, small caps label ("Question · Two-step equations"), equation in 22 px Fredoka |
-| Feedback card | Left rule and verdict chip coloured by result (green Correct / red Not yet · n attempts left / amber I need a number); amber "Hint:" block; grey "Solution:" block in display type; italic encouragement |
-| Typing indicator | Avatar + three bouncing dots |
-| Action pills | Indigo-tint pills for New question / Start quiz / Next question |
-| Composer | Full-width input with indigo Send button; sticky at the bottom of the tutor column |
-| Session card | Avatar, greeting, level pill, topic switch |
-| Progress card | Accuracy ring (84 px), attempted / correct-first-try, per-topic bars, strong / needs-practice chips, End session, summary card with "Study X now" |
-| Rail toggle (phone) | One-line summary "Your session · 3 attempted · 2 correct ▾" that expands the rail |
+| Top bar | Sticky and translucent. Gradient mark with an italic serif *x*, title and syllabus subtitle. Status pill with a green or amber dot. *My progress* appears once a session starts; *Start over* always. |
+| Setup card | "Set up your session" with three numbered steps: name, level as three tiles, and "Where do you want to start?". The third step says topics can be switched any time. A class control sits above one-line topic rows grouped by chapter, with short example equations. The first topic of each class is pre-selected and tagged *Start here*, and a note says "Not sure? Keep …". Full-width *Start learning*. |
+| Modes strip | Four cards on the setup page: Learn, Practice, Quiz, Ask a doubt, each with an icon and one line. Syllabus chips below. |
+| Workspace header | Learner avatar with initial, "Hi, name", level pill, and the topic switch. |
+| Mode control | Segmented control with icons. The active mode uses the gradient. A one-line description sits underneath. |
+| Question card | White card with a 4 px gradient rule, a small-caps label such as "Question 1 of 5" and the equation at 22 px, weight 800, tabular figures. |
+| Feedback card | Border tinted by verdict. Chip with a dot: Correct, Not yet · n attempts left, Partly right, I need an answer. *Hint:* block in amber with a bulb icon. *Solution:* block in grey with a sheet icon. Italic encouragement. |
+| Composer | Answer field plus a primary button labelled *Check answer* in Practice and Quiz, and *Send* in Learn and Ask a Doubt. |
+| Progress panel | Accuracy ring, attempted and correct-first-try counts, per-topic gradient bars, strong and needs-practice tags, *End session*, summary card. |
+| Student dashboard | Modal dialog opened from *My progress*. Four tiles, a by-topic table with status tags, and the last five mistakes. Built only from data saved in this browser. Phase 4 adds history and recommendation reasons. |
+
+**Hint button (Phase 3).** *Get a hint* sits in the action row while a practice question is open, then becomes *Another hint*, and disappears after two. Each press shows a yellow hint card labelled "Hint 1 of 2 · the idea" or "Hint 2 of 2 · next step". The hint comes from the app, not the model, so it is instant and never uses an attempt. Quiz has no Hint button.
+
+**Feedback additions (Phase 3).** When the app's analyser has evidence, a violet line above the feedback reads "Likely mistake: …" or, in grey, "Possible mistake: …". With no evidence there is no line, and the tutor asks for the steps. The *Hint:* block carries a small "the idea" or "next step" tag.
+
+**Working box (Phase 3).** A collapsible "Show your working" box above the answer field in Practice and Quiz, up to 600 characters. The working is sent with the answer, shown inside the student's message, and cleared afterwards.
+
+Screenshots: `p3-feedback-desktop.png` and `p3-feedback-phone.png`, with illustrative content.
+
+**Student dashboard, version 2 (Phase 4).** *My progress* opens a dialog with three parts.
+- **This session** and **All saved answers** tiles.
+- **Your next step:** the recommended topic, a tag such as "Easier questions", "Harder questions", "Review a prerequisite", "Move on", "Keep going" or "Not enough data yet", and the reason in one sentence built from the student's own numbers. One button follows it.
+- **By topic, Recent sessions and Recent mistakes.** The by-topic status is Mastered, Developing, Struggling or "Not enough data (n of 3)", with the rules printed under the table.
+
+The recommendation comes from `/api/recommend`, with no model call. Data stays in the browser under `algebratutor.v2`. A v1 record is migrated once into an "earlier" history row.
+
+**Difficulty chip.** Following a recommendation for easier or harder questions shows a violet chip in the workspace header, "Easier questions ×". Clicking it returns to normal difficulty.
+
+**Mixed revision.** In Quiz, *Mixed revision* opens a picker of all 14 topics grouped by class. It is pre-ticked with the current topic and any saved topic under 80 %, and asks for 2 to 5 topics. Each quiz question's label shows its topic.
+
+**Side panel wording.** The side panel covers this session only, so its lists are "Going well today" and "To revisit today". Judgements that need at least 3 answers live in the dashboard.
+
+Screenshots: `p4-dashboard-desktop.png`, `p4-dashboard-phone.png`, `p4-mixed-picker.png` and `p4-summary-desktop.png`, with illustrative data.
+
+**Balance scale (Phase 5).** Once an answer is revealed, the feedback card has a collapsible "See it step by step on a balance scale" panel, tagged "Every line checked".
+- **Scale:** a level beam with each side of the current line in a pan. The operation applied to both pans, such as "− 5", "÷ 3" or "× 6", sits above them.
+- **Caption:** names the step and says why the balance holds.
+- **Step list:** every line is clickable, with *Back* and *Next step* below.
+
+In Learn, *Show a worked example* adds a card with the topic's own example and opens the scale. The button then becomes *Another worked example*. Steps exist only for the five Class 8 equation topics, and the app solves and checks them without the model.
+
+Screenshots: `p5-reveal-desktop.png`, `p5-reveal-phone.png` and `p5-learn-desktop.png`.
 
 ## 6. States
 
 | State | What the learner sees |
 |---|---|
-| First visit | Hero + 3-step setup; Start learning |
-| Returning (saved profile) | Straight into Learn with the lesson opener |
-| Learn | Opener message, then conversation; composer placeholder "Ask a question or reply to the tutor…" |
-| Practice, no question | Intro message + "New question" pill |
-| Practice, answering | Question card; verdict cards after each answer with attempts left; "Next question" after reveal |
-| Quiz | "Question n of 5" cards, solution after each answer, score message, "Start another quiz" |
-| Waiting on the model | Typing indicator; composer and actions disabled |
-| Error | Centred red message with the server's explanation; a "New question" pill when a question expired |
-| Session summary | Indigo-tinted card with counts, needs-improvement, recommended next lesson, tips, "Study X now" |
-| Provider not configured | Amber status dot and the text "not configured (set ANTHROPIC_API_KEY)" |
+| First visit | Hero, modes strip, setup card |
+| Name missing | Red field border and "Enter your name so the tutor can greet you." under the field; focus returns to it |
+| Practice, no question | Intro message and a *New question* pill |
+| Generating a question or quiz | Skeleton question card: "Preparing a new question…" or "Preparing your quiz questions…" |
+| Checking an answer | Thinking bubble: "Checking your answer" with dots |
+| Learn opener, chat reply | "Preparing your lesson" or "Thinking" |
+| Busy | Input, *Check answer* and action pills are disabled, so the same answer cannot be sent twice |
+| Empty answer | "Type your answer first, for example x = 6." under the field |
+| Error | Red banner with an icon above the conversation, with the server's message and a dismiss button. It clears on the next action or mode change. |
+| Question expired | Banner text "That question expired. Ask for a new one." and a *New question* pill |
+| App failed to load | Banner under the top bar telling the learner to check the server and reload |
+| Dashboard, no answers yet | Empty state: "No answers recorded yet" with what to do next |
+| Provider not configured | Amber status pill: "not configured (set ANTHROPIC_API_KEY)", and a banner (Phase 6) saying what still works |
+| Model unreachable (Phase 6) | The health check pings the local model. If it is down, an amber banner under the top bar reads "The local AI model is not running…" with *Check again* |
+| Slow reply (Phase 6) | After 20 s the skeleton or thinking bubble adds "This is taking longer than usual…" |
+| Request failed (Phase 6) | The red banner shows a plain message by kind (not responding, busy, took too long, not set up) and *Try again*, which re-sends the same request without repeating the student's message. Server addresses and provider replies never reach the page |
+| Expired quiz question (Phase 6) | Skipped with a note, not scored, and the quiz carries on |
 
 ## 7. Accessibility
 
-- Contrast: ink on white ≥ 12:1; ink-3 labels 4.6:1; white on indigo buttons 7.4:1; verdict chips use dark text tints.
-- Visible focus rings on every control; the chat is an `aria-live="polite"` region; inputs have labels; the rail toggle exposes `aria-expanded`.
-- Touch targets ≥ 44 px; the composer stays reachable on phones.
-- All animation (typing dots, ring fill, button lift) is disabled under `prefers-reduced-motion`.
+- **Contrast.** Ink on white is about 15:1. Secondary text `#646c83` is 5.1:1 on white and 4.8:1 on the composer background. White on indigo is 6.3:1. Every chip uses dark text on a light tint at 4.5:1 or more.
+- **Focus.** A 2 px indigo outline with offset on every control. Hidden radio inputs pass focus to their tile.
+- **Semantics.** The chat is `aria-live="polite"`. Errors use `role="alert"`; waiting indicators use `role="status"`. Mode buttons expose `aria-pressed`. The dashboard is a native `<dialog>`, so Escape closes it and focus is trapped.
+- **Targets.** Buttons, inputs, mode buttons and tiles are 44 px tall or more. Top-bar buttons are 40 px.
+- **Motion.** Dots, shimmer, ring fill and button press are disabled under `prefers-reduced-motion`.
 
-## 8. Before / after
+## 8. Screenshots
 
-- Before: `docs/screenshots/01-setup.png`, `02-practice.png`, `03-narrow-quiz.png`.
-- After: `04-setup-desktop.png`, `05-practice-desktop.png`, `06-practice-phone.png`, `07-feedback-desktop.png` (question card, student bubble, feedback card with verdict chip and hint block), `08-setup-classes.png` (class selector with chapter-grouped topic cards).
+The Phase 2 screenshots are in `docs/screenshots/`, rendered in headless Chrome. The conversation in the practice and dashboard shots is illustrative content set through the page's own render functions, so the look can be judged without waiting on the model. They are design references, not test evidence. The browser test in `tests/e2e-browser.mjs` exercises the real flow.
+
+| File | Shows |
+|---|---|
+| `p2-setup-desktop.png`, `p2-setup-phone.png` | Setup page |
+| `p2-setup-validation.png` | Missing-name message |
+| `p2-practice-desktop.png`, `p2-practice-tablet.png`, `p2-practice-phone.png` | Workspace with question, feedback and hint |
+| `p2-quiz-loading.png` | Skeleton while quiz questions are generated |
+| `p2-error-validation.png` | Error banner and empty-answer message |
+| `p2-dashboard-desktop.png`, `p2-dashboard-phone.png` | Student dashboard |
+
+Version 1 screenshots `01`–`08` are kept for the before-and-after comparison.
+
+## 9. Changes from version 1
+
+| Area | Version 1 | Version 2 |
+|---|---|---|
+| Palette | Indigo `#4353d9` with an orange accent and canvas tints | Indigo `#4f46e5` with a violet accent; orange removed |
+| Type | Fredoka titles, Nunito text | Nunito only |
+| Icons | Emoji | Inline SVG |
+| Mode tabs | Underline tabs | Segmented control |
+| Learner and topic | Side panel | Workspace header |
+| Answer button | "Send" | "Check answer" in Practice and Quiz |
+| Waiting | Dots only | Skeleton card or a labelled thinking bubble |
+| Errors | Chat message | Dismissible banner |
+| Validation | Browser bubble or none | Inline messages |
+| Focus ring | Yellow, low contrast | Indigo, AA contrast |
+| Student dashboard | None | Dialog from *My progress* |
+| Breakpoints | One, at 900 px | Three |

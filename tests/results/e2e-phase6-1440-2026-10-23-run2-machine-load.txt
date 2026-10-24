@@ -1,0 +1,28 @@
+# Browser e2e, enhancement Phase 6 (final code), width 1440, 2026-10-23, run 2
+# E2E_WIDTH=1440 node tests/e2e-browser.mjs http://localhost:3010 ; server: PORT=3010 LLM_PROVIDER=ollama (qwen2:7b), headless Chrome 155
+
+viewport width 1440
+PASS  shareable link opens Practice tab — Local model · qwen2:7b
+PASS  progress panel shows learner
+PASS  New question button present
+PASS  question generated and rendered — Solve: 2x + 7 = 19 (71s)
+PASS  Hint button present before answering
+PASS  hint card shows 'Hint 1 of 2' and no answer — HINT 1 OF 2 the idea Which number is added to or taken away from the x term? Undo that first, on both sides.
+PASS  wrong answer → 'Not yet' with hint and attempts left — NOT YET · 2 ATTEMPTS LEFT It looks like you're trying to subtract 1 from 1000, but it seems there's a misunderstanding. When solving the equation 2x + 7 = 19, y
+PASS  working shown in the student's message and cleared from the box
+PASS  feedback hint moves to the next step after the button hint — next step — Subtract 7 from both sides of the equation 2x + 7 = 19. This will help isolate the term with x on on
+PASS  direct-answer request → hint, no solution — I NEED AN ANSWER You're on the right track! You need to subtract 7 from both sides of the equation 2x + 7 = 19. This will help isolate the term with x on one si
+PASS  third wrong answer → solution revealed — NOT YET Remember, our goal is to isolate the term with x on one side of the equation. First, subtract 7 from both sides to get 2x = 12. Then, divide both sides 
+PASS  'Next question' offered after reveal
+PASS  reveal includes verified steps whose last line matches the solution — ["2x + 7 = 19","2x = 12","x = 6"]
+PASS  Next step moves the balance scale on
+PASS  progress counts attempted 1 / correct 0
+PASS  needs-practice lists the topic
+PASS  Mixed revision picker opens with the current topic ticked
+PASS  Start quiz button present
+…DevTools command timed out; reconnecting
+…DevTools connection dropped; reconnecting to the tab
+FAIL  flow completed without exception — timeout waiting for quiz question 1
+PASS  no JavaScript errors in the page
+
+19 / 20 UI checks passed

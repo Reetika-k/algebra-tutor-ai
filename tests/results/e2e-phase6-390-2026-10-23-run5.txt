@@ -1,0 +1,34 @@
+# Browser e2e, enhancement Phase 6 (final code), width 390, 2026-10-23, run 5
+# E2E_WIDTH=390 node tests/e2e-browser.mjs http://localhost:3010 ; server: PORT=3010 LLM_PROVIDER=ollama (qwen2:7b), headless Chrome 155; load before: load averages: 7.83 12.82 20.13
+
+viewport width 390
+PASS  shareable link opens Practice tab — Local model · qwen2:7b
+PASS  progress panel shows learner
+PASS  New question button present
+PASS  question generated and rendered — Solve: 3x + 4 = 16 (26s)
+PASS  Hint button present before answering
+PASS  hint card shows 'Hint 1 of 2' and no answer — HINT 1 OF 2 the idea Which number is added to or taken away from the x term? Undo that first, on both sides.
+PASS  wrong answer → 'Not yet' with hint and attempts left — NOT YET · 2 ATTEMPTS LEFT It looks like you're trying to subtract 1 from 1000, but that's not the correct approach for solving this equation. Remember, you need
+PASS  working shown in the student's message and cleared from the box
+PASS  feedback hint moves to the next step after the button hint — next step — Subtract 4 from both sides of the equation to isolate the term with x. This will help you find the v
+PASS  direct-answer request → hint, no solution — I NEED AN ANSWER You're on the right track! You need to subtract 4 from both sides of the equation to isolate the term with x. This step will help you find the 
+PASS  third wrong answer → solution revealed — NOT YET When solving for x, you need to isolate the term with x by subtracting 4 from both sides of the equation. This will help you find the value of x. I can'
+PASS  'Next question' offered after reveal
+PASS  reveal includes verified steps whose last line matches the solution — ["3x + 4 = 16","3x = 12","x = 4"]
+PASS  Next step moves the balance scale on
+PASS  progress counts attempted 1 / correct 0
+PASS  needs-practice lists the topic
+PASS  Mixed revision picker opens with the current topic ticked
+PASS  Start quiz button present
+PASS  quiz shows 'Question 1 of N' — Question 1 of 5 (92s)
+PASS  quiz reveals solution after one attempt — NOT YET Remember, you need to isolate x by performing the same operation on both sides of the equation. Let's break it down step by step. First, you need to sub
+PASS  'Next question' offered in quiz
+PASS  summary shows attempted/correct and next lesson — Today's performance Questions attempted: 2 · Correct: 0 Needs improvement: Two-step equations Recommended next lesson: Two-step equations Easier questions Why: 
+PASS  dashboard: this session 2 attempted, next step with a reason — YOUR NEXT STEP Two-step equations Easier questions You got 0 of 9 right first time on Two-step equations, so practise it with easier questions; if they still fe
+PASS  Learn opener rendered as plain text — Hello Asha! I'm glad you're here to learn about two-step equations. Let's start with the main idea: solving equations th… (35s)
+PASS  Learn offers a worked example
+PASS  worked example shows the steps to x = … — Solve: 3x + 5 = 20 → x = 5
+PASS  override attempt answered by the guard — I'm your algebra tutor, so I'll stay with equations from your syllabus. Would you like an explanation, a practice question, or help with a specific equation?
+PASS  no JavaScript errors in the page
+
+28 / 28 UI checks passed

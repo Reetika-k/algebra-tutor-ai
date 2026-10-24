@@ -1,0 +1,15 @@
+# Browser reliability check (model unavailable), width 390, 2026-10-23
+# node tests/reliability-browser.mjs 390 ; headless Chrome 155
+
+PASS  model down: banner says so and what still works — The local AI model is not running. Start Ollama, then press Check again. Hints, worked examples and your saved progress still work. Check again
+PASS  model badge marked as a warning
+PASS  failed question shows a plain message with Try again, and no internal detail — The tutor's AI service is not responding right now. Please try again in a moment. Try again
+PASS  New question is offered again after the failure
+PASS  Try again re-runs the request and reports the same failure cleanly
+PASS  Learn: the lesson fails cleanly, and no half-started lesson is left
+PASS  Learn: worked examples still work without the model — Solve: 3x + 5 = 20
+PASS  dashboard still opens
+PASS  triple-clicking New question sends one request, not three — 1 request(s)
+PASS  no JavaScript errors in the page
+
+10 / 10 reliability checks passed (width 390)

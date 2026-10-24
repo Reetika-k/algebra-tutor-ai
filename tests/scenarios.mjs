@@ -18,10 +18,19 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const server = await new Promise((resolve) => { const s = app.listen(0, () => resolve(s)); });
 const base = `http://localhost:${server.address().port}`;
 
-const post = async (p, body, raw = false) => {
-  const res = await fetch(base + p, { method: "POST", headers: { "content-type": "application/json" }, body: raw ? body : JSON.stringify(body) });
-  return { status: res.status, ...(await res.json().catch(() => ({}))) };
-};
+// node:http rather than fetch: Node's built-in fetch gives up after 300 s waiting for headers, and a mixed
+// quiz on the local model can legitimately take longer (Phase 6 full run, S26). The app's own limits still apply.
+import http from "node:http";
+const post = (p, body, raw = false) => new Promise((resolve, reject) => {
+  const data = raw ? body : JSON.stringify(body);
+  const req = http.request(base + p, { method: "POST", headers: { "content-type": "application/json", "content-length": Buffer.byteLength(data) } }, (res) => {
+    let text = "";
+    res.on("data", (c) => (text += c));
+    res.on("end", () => { let json = {}; try { json = JSON.parse(text); } catch {} resolve({ status: res.statusCode, ...json }); });
+  });
+  req.on("error", reject);
+  req.end(data);
+});
 const noLatex = (t) => !/\\[\[\]()]|\\frac|\$/.test(t);
 const words = (t) => t.trim().split(/\s+/).length;
 const statedX = (t) => { const m = [...t.replace(/[−–]/g, "-").matchAll(/\bx\s*=\s*(-?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?)/g)]; return m.length ? m[m.length - 1][1].replace(/\s/g, "") : null; };
@@ -200,6 +209,56 @@ await scenario("S22", "Class 9 any-solution and find-y", "two-var-any/beginner: 
     const rv = await post("/api/evaluate", { profile: pv, mode: "practice", questionId: qv.id, studentAnswer: `y = ${fmt(stored(qv.id).truth.value)}`, attempt: 1 });
     const ok = ra.correct === true && rv.correct === true;
     return { status: ok ? "PASS" : "FAIL", actual: `${qa.prompt} → (${x}, ${y}) ${ra.verdict}\n${qv.prompt} → ${rv.verdict}` }; });
+
+// ---- Phase 3: diagnosis and hint ladder ----
+const { linearCandidates } = await import("../src/diagnose.js");
+const { sameHint } = await import("../src/hints.js");
+const { revealsTruth, extractEquation } = { ...(await import("../src/tutor.js")), ...(await import("../src/validate.js")) };
+
+await scenario("S23", "Mistake diagnosis (deterministic) + no leak", "two-step/beginner: generate 1; answer with the value a known mistake produces (sign kept when moving the constant, or the first unambiguous pattern)", "Diagnosis names that pattern as likely; feedback and hint do not state the answer; nothing revealed",
+  async () => { const g = await post("/api/questions", { profile: beginner, count: 1 });
+    const q = g.questions?.[0]; if (!q) return { status: "FAIL", actual: "no question: " + JSON.stringify(g) };
+    const st = stored(q.id); const truth = st.truth.value;
+    const cands = linearCandidates(extractEquation(q.prompt), "two-step").filter((c) => Math.abs(c.value - truth) > 1e-6);
+    const unique = cands.filter((c) => cands.filter((d) => Math.abs(d.value - c.value) < 1e-6).every((d) => d.code === c.code));
+    const pick = unique.find((c) => c.code === "sign_transpose") || unique[0];
+    if (!pick) return { status: "REVIEW", actual: `${q.prompt}: no unambiguous mistake pattern for this equation` };
+    const r = await post("/api/evaluate", { profile: beginner, mode: "practice", questionId: q.id, studentAnswer: `x = ${fmt(pick.value)}`, attempt: 1 });
+    const leak = revealsTruth(r.feedback, st.truth) || revealsTruth(r.hint, st.truth);
+    const ok = r.diagnosis?.code === pick.code && r.diagnosis?.confidence === "likely" && !leak && !r.revealed;
+    return { status: ok ? "PASS" : "FAIL", actual: `${q.prompt} [x = ${truth}] answered x = ${fmt(pick.value)} (${pick.code})\ndiagnosis=${JSON.stringify(r.diagnosis)} leak=${leak}\nfeedback: ${r.feedback}\nhint: ${r.hint}` }; });
+
+await scenario("S24", "Hint ladder: two different hints", "two-step/beginner: generate 1; two wrong answers far from any pattern, sending the first hint back as previousHints", "Hint level 1 then 2; second hint is not a repeat of the first; nothing revealed",
+  async () => { const g = await post("/api/questions", { profile: beginner, count: 1 });
+    const q = g.questions?.[0]; if (!q) return { status: "FAIL", actual: "no question: " + JSON.stringify(g) };
+    const st = stored(q.id); const far = st.truth.value + 97;
+    const a1 = await post("/api/evaluate", { profile: beginner, mode: "practice", questionId: q.id, studentAnswer: `x = ${fmt(far)}`, attempt: 1 });
+    const a2 = await post("/api/evaluate", { profile: beginner, mode: "practice", questionId: q.id, studentAnswer: `x = ${fmt(far + 1)}`, attempt: 2, previousHints: [a1.hint].filter(Boolean) });
+    const ok = a1.hintLevel === 1 && a2.hintLevel === 2 && a1.hint && a2.hint && !sameHint(a1.hint, a2.hint) && !a1.revealed && !a2.revealed;
+    return { status: ok ? "PASS" : "FAIL", actual: `${q.prompt}\nhint 1 (level ${a1.hintLevel}): ${a1.hint}\nhint 2 (level ${a2.hintLevel}${a2.hintReplaced ? ", app fallback" : ""}): ${a2.hint}` }; });
+
+// ---- Phase 4: recommendations and mixed revision ----
+await scenario("S25", "Summary with reason and adaptation", "stats: two-step 1/4 and one-step 1/3 saved; session two-step 1/2", "Next = One-step (weak prerequisite), adaptation 'prerequisite', reason quotes 1 of 4; today's counts 2/1; message names the plan without contradicting it",
+  async () => { const r = await post("/api/summary", { profile: beginner, stats: { byTopic: { "two-step": { attempted: 4, correct: 1 }, "one-step": { attempted: 3, correct: 1 } }, mistakes: [{ question: "Solve: 2x + 5 = 17", studentAnswer: "x = 11", correctAnswer: "x = 6" }] }, session: { byTopic: { "two-step": { attempted: 2, correct: 1 } } } });
+    const ok = r.status === 200 && r.nextTopicId === "one-step" && r.adaptation === "prerequisite" && /1 of 4/.test(r.reason || "") && r.attempted === 2 && r.correct === 1 && typeof r.message === "string" && r.message.length > 0;
+    return { status: ok ? (/both-sides|brackets|fractions|quadratic/i.test(r.message) ? "REVIEW" : "PASS") : "FAIL", actual: `next=${r.nextTopicId} adaptation=${r.adaptation} today=${r.attempted}/${r.correct}\nreason: ${r.reason}\nmessage: ${r.message}\ntips: ${JSON.stringify(r.tips)}` }; });
+
+await scenario("S26", "Mixed revision quiz generation", "generate 4 questions over one-step + fractions + system-solve (beginner)", "Questions from every topic that produced a usable one, each passing its own topic's check and graded against it",
+  async () => { const g = await post("/api/questions", { profile: beginner, count: 4, topics: ["one-step", "fractions", "system-solve"] });
+    if (!g.questions?.length) return { status: "FAIL", actual: JSON.stringify(g) };
+    const topics = g.questions.map((q) => q.topic);
+    const ownTopic = g.questions.every((q) => stored(q.id).topic === q.topic);
+    const graded = [];
+    for (const q of g.questions) {
+      const t = stored(q.id).truth;
+      const ans = t.type === "pair" ? `x = ${fmt(t.x)}, y = ${fmt(t.y)}` : `x = ${fmt(t.value)}`;
+      const r = await post("/api/evaluate", { profile: beginner, mode: "quiz", questionId: q.id, studentAnswer: ans, attempt: 1 });
+      graded.push(`${q.topic}: ${q.prompt} → ${r.verdict}`);
+    }
+    const allCorrect = graded.every((x) => x.endsWith("correct"));
+    const distinct = new Set(topics).size;
+    const ok = ownTopic && allCorrect && distinct >= 2;
+    return { status: ok ? "PASS" : "FAIL", actual: `${g.questions.length} questions over ${distinct} topics (rejected ${g.rejectedCount})\n${graded.join("\n")}` }; });
 
 // ---- summary ----
 await scenario("S19", "Session summary", "stats: one-step 4/4, fractions 3/1, mistakes listed", "Needs-practice = fractions; next lesson = fractions; message + tips present",

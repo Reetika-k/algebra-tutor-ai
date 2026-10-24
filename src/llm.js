@@ -14,6 +14,20 @@ export class LLMError extends Error {
   }
 }
 
+// What the browser is told, by kind. The detailed message (URLs, provider replies) stays in the server log.
+export const PUBLIC_ERRORS = {
+  auth: "The tutor's AI service is not set up on this server yet. Hints, worked examples and your progress still work.",
+  rate: "The tutor is busy right now. Please wait a moment and try again.",
+  timeout: "The tutor took too long to answer. Please try again.",
+  provider: "The tutor's AI service is not responding right now. Please try again in a moment.",
+  schema: "The tutor's reply could not be used. Please try again.",
+  refusal: "The tutor could not answer that. Try asking in a different way.",
+  generation: "I could not prepare a usable question this time. Please try again.",
+};
+export function publicError(err) {
+  return { error: PUBLIC_ERRORS[err.kind] || PUBLIC_ERRORS.provider, kind: PUBLIC_ERRORS[err.kind] ? err.kind : "provider" };
+}
+
 // ---------- Claude ----------
 
 let anthropicClient = null;
@@ -42,6 +56,7 @@ function claudeParams({ system, messages, maxTokens, effort }) {
 
 function mapClaudeError(err) {
   if (err instanceof Anthropic.AuthenticationError) return new LLMError("Claude API key is invalid. Check ANTHROPIC_API_KEY.", "auth", 503);
+  if (err instanceof Anthropic.APIConnectionTimeoutError) return new LLMError("Claude request timed out.", "timeout", 504);
   if (err instanceof Anthropic.RateLimitError) return new LLMError("Claude API rate limit reached. Try again in a moment.", "rate", 429);
   if (err instanceof Anthropic.APIError) return new LLMError(`Claude API error ${err.status}: ${err.message}`, "provider", 502);
   // No API key/token in the environment and the request never reached the API: almost certainly missing credentials.
@@ -86,6 +101,7 @@ async function ollamaChat(body) {
       signal: AbortSignal.timeout(300_000), // local models: structured generation measured at 41–126 s, occasionally longer
     });
   } catch (err) {
+    if (err?.name === "TimeoutError") throw new LLMError("Ollama did not answer within 300 s.", "timeout", 504);
     throw new LLMError(`Cannot reach Ollama at ${config.ollama.url}: ${err.message}`, "provider", 503);
   }
   if (!res.ok) throw new LLMError(`Ollama error ${res.status}: ${await res.text()}`, "provider", 502);
@@ -120,6 +136,20 @@ async function ollamaCompleteJSON({ system, messages, schema, maxTokens }) {
 }
 
 // ---------- public API ----------
+
+/**
+ * Is the model reachable right now? Ollama: a 2-second request to its model list (true / false).
+ * Claude: null, because checking would cost a request; configuration is reported separately.
+ */
+export async function providerReachable() {
+  if (config.provider !== "ollama") return null;
+  try {
+    const res = await fetch(`${config.ollama.url}/api/tags`, { signal: AbortSignal.timeout(2000) });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
 
 export const llm = {
   provider: config.provider,

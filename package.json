@@ -1,14 +1,14 @@
 {
   "name": "algebra-tutor-ai",
-  "version": "0.3.0",
-  "description": "AI Tutor capstone: personalized Class 8 algebra tutor (linear equations in one variable)",
+  "version": "0.4.0",
+  "description": "AI Tutor capstone: personalized algebra tutor for Classes 8 to 10 (NCERT equations chapters)",
   "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "test": "node --test tests/unit.test.mjs",
-    "test:tap": "node --test --test-reporter=tap --test-reporter-destination=tests/results/unit-latest.tap tests/unit.test.mjs",
+    "test": "node --test tests/unit.test.mjs tests/reliability.test.mjs",
+    "test:tap": "node --test --test-reporter=tap --test-reporter-destination=tests/results/unit-latest.tap tests/unit.test.mjs tests/reliability.test.mjs",
     "dashboard": "node scripts/build-dashboard.mjs",
     "test:scenarios": "node tests/scenarios.mjs",
     "test:remote": "node tests/smoke-remote.mjs",

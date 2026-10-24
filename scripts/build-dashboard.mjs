@@ -53,7 +53,7 @@ const findings = [...testingMd.matchAll(/^\| ((?:F|R)\d+) \| ([^|]+)\|([^\n]*)$/
   return { id: m[1], problem: m[2].trim(), type: cells.length >= 2 ? cells[cells.length - 1] : "" };
 });
 
-const shots = ["04-setup-desktop.png", "05-practice-desktop.png", "07-feedback-desktop.png"].filter((f) => exists(p("docs/screenshots", f)));
+const shots = ["p2-setup-desktop.png", "p3-feedback-desktop.png", "p5-reveal-desktop.png", "p4-dashboard-desktop.png"].filter((f) => exists(p("docs/screenshots", f)));
 const img = (f) => `<img src="data:image/png;base64,${fs.readFileSync(p("docs/screenshots", f)).toString("base64")}" alt="${esc(f)}">`;
 
 // ---------- tiny SVG charts ----------

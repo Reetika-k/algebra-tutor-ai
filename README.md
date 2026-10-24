@@ -14,24 +14,27 @@ Demonstrate an AI tutor that is **interactive, adaptive and personalized**: it e
 
 ## Solution
 
-A small web app: a Node.js server that assembles layered prompts and calls the Claude API, plus a plain HTML/CSS/JS frontend with four modes (Learn, Practice, Quiz, Ask a Doubt), a progress panel and an end-of-session summary.
+A small web app: a Node.js server that assembles layered prompts and calls the Claude API, plus a plain HTML/CSS/JS frontend with four modes (Learn, Practice, Quiz, Ask a Doubt), a session progress panel, a student dashboard and an end-of-session summary. The parts that must be right are computed by the app, not the model: grading, mistake diagnosis, the hint ladder's fallbacks, recommendations and worked steps.
 
 ## Features
 
-- Learner setup: name, level (Beginner / Intermediate / Advanced), class (8, 9 or 10) and topic (14 topics across four NCERT chapters)
-- **Learn** – explanation with worked example and check questions, adapted to level
-- **Practice** – one generated question at a time, three attempts, hint after each wrong attempt, solution after the last
-- **Quiz** – five generated questions, one attempt each, immediate solution, score
+- Learner setup: name, level (Beginner / Intermediate / Advanced), class (8, 9 or 10) and a starting topic (14 topics across four NCERT chapters; switchable any time)
+- **Learn** – explanation with worked example and check questions, adapted to level; **worked examples on a balance scale** for the Class 8 equation topics
+- **Practice** – one generated question at a time, three attempts, **hints that build step by step** (the idea, then the next step, then the solution), a **Hint button** that uses no attempt, and optional **working** the tutor can point to
+- **Quiz** – five generated questions, one attempt each, immediate solution, score; **mixed revision** across 2–5 topics
 - **Ask a Doubt** – free in-scope questions
 - Answer evaluation: verdict, explanation, hint, encouragement, correct answer when allowed; answers may be a number, a pair (x, y), any solution of a two-variable equation, or two roots (partial credit for one root)
-- Progress panel: attempted / correct-first-try per topic, strong areas, needs practice
-- Session summary with recommended next lesson and tips
+- **Mistake diagnosis**: the app names a likely mistake (a sign not changed, a bracket half expanded, x and y swapped, …) only when exactly one known mistake explains the answer; otherwise it asks for the steps
+- **Verified steps** after a reveal: every line is re-solved by the app and must keep the same answer
+- Session panel (today) and a **student dashboard** (saved): first-try accuracy, status per topic, recent sessions, recent mistakes, and **your next step with a reason** built from your own numbers
+- **Recommendations** by transparent rules: not enough data under 3 answers; easier questions or a prerequisite under 50 %; harder questions, then the next topic, at 80 % over 4+ answers
+- Session summary with recommended next lesson, the reason, and tips
 - Shareable start links: `/?name=Asha&level=beginner&topic=two-step&mode=practice` opens the tutor directly
-- Guardrails: scope control, prompt-injection guard, answer-leak scrubbing, plain-text maths sanitizer, input validation, error handling
+- Guardrails: scope control, prompt-injection guard, answer-leak scrubbing, no invented mistakes, plain-text maths sanitizer, input validation, plain error messages with Try again, request timeouts, and a banner when the model is unavailable
 
 ## Design
 
-A UI/UX pass after the working prototype: a hero setup with level and topic cards, a conversation-first tutor column with icon tabs and mode descriptions, distinct question and feedback cards with colour-coded verdicts, a tutor avatar, an accuracy ring and per-topic bars in a collapsible session rail, and a status pill for the model. It shares its type and tokens with the Equation Catcher game. Audit, system, layouts, components and states: [docs/DESIGN_UI.md](docs/DESIGN_UI.md); before/after screenshots in `docs/screenshots/`.
+Version 2 of the interface (October 2026): light neutral surfaces, navy ink, indigo and violet accents, one typeface (Nunito), inline SVG icons, a segmented mode control, question and feedback cards with verdict chips, hint and diagnosis lines, a balance-scale step viewer, a student dashboard dialog, explicit loading, error and empty states, and three breakpoints (desktop, tablet, phone). System, components, states and screenshots: [docs/DESIGN_UI.md](docs/DESIGN_UI.md) and `docs/screenshots/` (version 1 shots `01`–`08` kept for comparison; `p2-`–`p5-` for version 2).
 
 ## Technology stack
 
@@ -52,7 +55,11 @@ A UI/UX pass after the working prototype: a hero setup with level and topic card
 | Learn / Doubt replies | LLM chat with a layered system prompt (persona + topic + level + mode) | Scenario tests: scope, spelling tolerance, injection, LaTeX-free, length; **override guard** answers blatant "ignore your instructions" messages without the model; **LaTeX sanitizer** normalises every reply to plain-text maths |
 | Question generation | Structured JSON output (schema-constrained) | **Topic-shape check**; for equation topics the prompt is **solved deterministically** and a wrong model answer is corrected (repaired) rather than trusted; word problems must satisfy their own equation or are discarded and regenerated |
 | Answer evaluation | Deterministic numeric verdict **then** LLM feedback conditioned on that verdict | The model never grades; answer-leak detector with retry and safe fallback; solution guaranteed to state `x = value` |
-| Session summary | Deterministic statistics + LLM recommendation (structured) | Next topic restricted to the fixed topic list; numbers come from the app |
+| Mistake diagnosis | Rule-based: the answer each known mistake would give is recomputed and compared (`src/diagnose.js`) | "Likely" only when exactly one mistake matches; the model phrases it; with no evidence, guesses are removed from its text |
+| Hint ladder | Prompted levels (idea → next step → reveal) with app-written fallbacks (`src/hints.js`) | Repeats (also when padded) and level-1 hints with numbers are replaced by the app's next step |
+| Recommendations | Transparent rules over first-attempt counts (`src/recommend.js`), no learned model | Reason sentence quotes the student's numbers; prerequisites are earlier syllabus topics |
+| Worked steps | Deterministic step generator (`src/steps.js`) | Every line is re-solved and must keep the root, or nothing is shown |
+| Session summary | Deterministic statistics + rules-based next step + LLM message (structured) | Next topic, kind of practice and reason come from the app |
 | Prompt caching | Stable system prefix marked cacheable on the Claude API | `usage.cache_read_input_tokens` |
 
 Details, including why RAG and fine-tuning were deliberately not used, are in [docs/DESIGN.md](docs/DESIGN.md).
@@ -60,20 +67,22 @@ Details, including why RAG and fine-tuning were deliberately not used, are in [d
 ## Architecture
 
 ```
-Student → Browser UI → Express API (/api/chat · /api/questions · /api/evaluate · /api/summary)
+Student → Browser UI → Express API (/api/chat · /api/questions · /api/evaluate · /api/hint · /api/recommend · /api/steps · /api/summary)
         → Prompt builder (src/prompts.js) → LLM provider (src/llm.js: Claude | Ollama)
         → Validators (src/validate.js, src/expr.js) → Response → UI → learner profile → summary
 ```
 
 ```
-src/config.js    environment and limits          src/prompts.js   prompt layers + JSON schemas
-src/topics.js    the 7 topics, forms, shapes     src/llm.js       Claude / Ollama provider layer
-src/expr.js      safe expression evaluator       src/tutor.js     orchestration + answer gating
-src/validate.js  request schemas, answer parsing, linear solver, self-consistency, topic-shape and override checks
+src/config.js    environment and limits          src/prompts.js   prompt layers + JSON schemas (v2.2)
+src/topics.js    14 topics, forms, prerequisites src/llm.js       Claude / Ollama provider, public error messages
+src/expr.js      safe expression evaluator       src/tutor.js     orchestration + answer gating + guards
+src/validate.js  request schemas, answer parsing, solvers, self-consistency, topic-shape and override checks
+src/diagnose.js  mistake patterns                src/hints.js     hint ladder and fallbacks
+src/recommend.js recommendation rules            src/steps.js     verified worked steps
 src/format.js    LaTeX → plain-text sanitizer for model output
 src/app.js       Express routes                  server.js        entry point
-public/          index.html · styles.css · app.js
-tests/           unit.test.mjs · scenarios.mjs · smoke-remote.mjs · results/
+public/          index.html · styles.css · app.js · progress.js (saved progress, algebratutor.v2)
+tests/           unit.test.mjs · reliability.test.mjs · scenarios.mjs · e2e-browser.mjs · reliability-browser.mjs · setup-check-browser.mjs · smoke-remote.mjs · results/
 docs/            selection, design, prompts, testing, capstone report, demo, deployment
 ```
 
@@ -114,13 +123,17 @@ LLM_PROVIDER=ollama npm start
 ## Testing
 
 ```bash
-npm test                 # 39 deterministic unit tests, no network
+npm test                 # 89 deterministic tests (unit + reliability over HTTP), no model needed
 npm run test:tap         # the same tests, recorded to tests/results/unit-latest.tap for the dashboard
-npm run test:scenarios   # 22 AI scenarios against the configured provider → tests/results/*.md + *.json
+npm run test:scenarios   # 26 AI scenarios against the configured provider → tests/results/*.md + *.json
+SCENARIOS=S23,S24 npm run test:scenarios               # run selected scenarios only
+npm run test:e2e         # browser flow, 28 checks (needs headless Chrome on port 9333; see docs/TESTING.md)
+E2E_WIDTH=390 npm run test:e2e                         # the same flow at phone width
+node tests/reliability-browser.mjs 390                 # browser checks with the model unavailable
 BASE_URL=https://<deployed-url> npm run test:remote   # post-deployment smoke test
 ```
 
-Three scenario runs on the local model went from 12/19 to 16/19 to 18/19 passing as each run's failures were fixed; the Classes 8–10 suite (22 scenarios, prompt v2.0) then passed in full across two runs. Results, failures found and the fixes they led to are documented in [docs/TESTING.md](docs/TESTING.md); prompt iterations in [docs/PROMPT_ENGINEERING.md](docs/PROMPT_ENGINEERING.md).
+Three scenario runs on the local model went from 12/19 to 16/19 to 18/19 passing as each run's failures were fixed; the Classes 8–10 suite (22 scenarios, prompt v2.0) then passed in full across two runs. After the October 2026 enhancement round the 26-scenario suite ran 20/26, and the six failures (one generation bug, fixed; three model timeouts; one over-long reply) passed on re-run. Results, failures found and the fixes they led to are documented in [docs/TESTING.md](docs/TESTING.md); prompt iterations in [docs/PROMPT_ENGINEERING.md](docs/PROMPT_ENGINEERING.md).
 
 ## Quality dashboard
 
@@ -140,7 +153,10 @@ Topics are data in `src/topics.js`; adding one means adding an entry and, for a 
 ## Limitations
 
 - Generated questions are kept in server memory for three hours; a restart invalidates open questions (the UI asks for a new one).
-- Progress lives in the browser (localStorage); there is no login or database, by design (optional per the PDF).
+- Progress lives in the browser (localStorage, `algebratutor.v2`, migrated once from v1); there is no login or database, by design (optional per the PDF). Clearing site data or another browser starts afresh.
+- Mistake diagnosis and worked steps are strongest for the Class 8 equation topics; Class 9–10 topics get fewer patterns and no balance scale.
+- Recommendations use first-attempt results only; hints used are not counted.
+- On the local model, a quiz or a mixed revision quiz can take one to four minutes to prepare; the page says so after 20 seconds.
 - Answers are numbers, pairs or root sets; chapters whose answers are expressions, graphs or proofs are out of scope.
 - The offline model (`qwen2:7b`) is noticeably weaker and slower than Claude; its results are reported separately and never mixed.
 - Model replies are non-deterministic: the off-topic boundary held in most but not all runs (see `docs/TESTING.md`, F15).

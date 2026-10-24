@@ -1,0 +1,26 @@
+{
+  "provider": "ollama",
+  "model": "qwen2:7b",
+  "promptVersion": "2.1",
+  "appVersion": "0.3.0",
+  "results": [
+    {
+      "id": "S23",
+      "category": "Mistake diagnosis (deterministic) + no leak",
+      "action": "two-step/beginner: generate 1; answer with the value a known mistake produces (sign kept when moving the constant, or the first unambiguous pattern)",
+      "expected": "Diagnosis names that pattern as likely; feedback and hint do not state the answer; nothing revealed",
+      "status": "PASS",
+      "actual": "Solve: 4x + 3 = 19 [x = 4] answered x = 5.5 (sign_transpose)\ndiagnosis={\"code\":\"sign_transpose\",\"label\":\"A sign was not changed when a term moved across =\",\"confidence\":\"likely\",\"explanation\":\"When a term moves to the other side of the equals sign, its sign changes: plus becomes minus and minus becomes plus.\"} leak=false\nfeedback: It looks like you didn't change the sign of the term when you moved it across the equals sign. When you move a term from one side of the equation to the other, you must change its sign. For example, if you have 4x + 3 = 19 and you want to move +3 to the other side, it becomes -3. Let's try to solve it step by step together.\nhint: Which number is added to or taken away from the x term? Undo that first, on both sides.",
+      "ms": 81966
+    },
+    {
+      "id": "S24",
+      "category": "Hint ladder: two different hints",
+      "action": "two-step/beginner: generate 1; two wrong answers far from any pattern, sending the first hint back as previousHints",
+      "expected": "Hint level 1 then 2; second hint is not a repeat of the first; nothing revealed",
+      "status": "PASS",
+      "actual": "Solve: 4x + 3 = 19\nhint 1 (level 1): Which number is added to or taken away from the x term? Undo that first, on both sides.\nhint 2 (level 2): Subtract 3 from both sides of the equation.",
+      "ms": 89586
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+# Browser e2e, enhancement Phase 6 (final code), width 390, 2026-10-23, run 2
+# E2E_WIDTH=390 node tests/e2e-browser.mjs http://localhost:3010 ; server: PORT=3010 LLM_PROVIDER=ollama (qwen2:7b), headless Chrome 155
+
+viewport width 390
+PASS  shareable link opens Practice tab — Local model · qwen2:7b
+PASS  progress panel shows learner
+PASS  New question button present
+…DevTools connection dropped; reconnecting to the tab
+FAIL  flow completed without exception — timeout waiting for question card
+PASS  no JavaScript errors in the page
+
+4 / 5 UI checks passed
