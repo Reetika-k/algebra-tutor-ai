@@ -127,6 +127,8 @@ Unchanged: topic ids, answer formats and parsers, verdicts, `MAX_ATTEMPTS`, the 
 
 What changed, tests executed with real results, known limitations, remaining tasks. No deployment.
 
+- Done 2026-10-26: see `docs/READINESS_REVIEW.md`.
+
 ## 7. Risks and how they are handled
 
 | Risk | Handling |
