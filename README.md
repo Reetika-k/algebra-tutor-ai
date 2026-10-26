@@ -169,6 +169,10 @@ Topics are data in `src/topics.js`; adding one means adding an entry and, for a 
 
 Streaming replies, persistent progress with Supabase, a teacher view of class-wide weak areas, Hindi explanations, voice input, and more chapters once the pattern is proven.
 
+## Readiness
+
+The final local review of the October 2026 enhancement round (tests on the final code, known limitations, and the checklist before deploying) is in [docs/READINESS_REVIEW.md](docs/READINESS_REVIEW.md).
+
 ## Deployment
 
 See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Live URL: _to be added after deployment_. The quality dashboard is served by the app at `<live URL>/reports/dashboard.html`.
