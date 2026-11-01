@@ -73,7 +73,7 @@ Techniques deliberately **not** used: RAG/embeddings (the syllabus content is sm
 
 ## Vibe coding plan
 
-Claude Code is used incrementally: scaffold → core UI/API → LLM wiring → prompt iterations → tests → fixes → UI polish → docs → deployment config. Meaningful prompts and debugging exchanges are recorded in `docs/CAPSTONE_DOCUMENTATION.md`.
+The AI coding assistant is used incrementally: scaffold → core UI/API → LLM wiring → prompt iterations → tests → fixes → UI polish → docs → deployment config. Meaningful prompts and debugging exchanges are recorded in `docs/CAPSTONE_DOCUMENTATION.md`.
 
 ## User flow
 
