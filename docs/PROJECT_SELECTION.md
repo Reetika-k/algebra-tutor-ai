@@ -22,7 +22,7 @@ The PDF defines three project topics (pages 1–32), common submission requireme
 - **Fit with the capstone requirements.** Page 1 lists what must be demonstrated: problem understanding, practical use of AI, prompt engineering, vibe coding, API integration, UX thinking, testing and iteration. The AI Tutor exercises every one of these *inside the product*, not only in the development process.
 - **AI/ML skills demonstrated.** Direct LLM API integration; a layered prompt architecture (persona + topic + level + mode); structured JSON outputs for question generation, answer feedback and session summaries; validation of model output (a deterministic answer check and a self-consistency check on generated questions); adaptive difficulty; and a personalized recommendation. These are the course's core ideas: *when* to use an LLM, *how* to constrain it, and *how* to verify it.
 - **Prompt-engineering skills demonstrated.** Behaviours the PDF asks for (hints before answers, encourage retry, adjust difficulty, stay on topic, constructive feedback) are all prompt-controlled and observable, so prompt iterations can be tested and documented with real before/after results.
-- **Vibe coding.** The whole application (backend, frontend, tests, documentation) is built incrementally with Claude Code, one phase at a time, and the prompts are recorded.
+- **Vibe coding.** The whole application (backend, frontend, tests, documentation) is built incrementally with an AI coding assistant, one phase at a time, and the prompts are recorded.
 - **Meaningful testing.** Step 10 defines seven learner behaviours to test; each maps to an automated scenario. The deterministic parts (answer normalization, validation, prompt assembly) are unit-testable without an API key.
 - **Working prototype.** A small Node.js server plus plain HTML/CSS/JS; runs locally with one environment variable and deploys to any Node host.
 - **Practical AI usage.** An evaluator can see AI adding value at each step: explain, generate, evaluate, recommend. In the game project, AI is absent from the product; in the voice project, most of the "AI" is platform configuration.
@@ -60,7 +60,7 @@ The PDF defines three project topics (pages 1–32), common submission requireme
 - One subject with approximately 5–10 topics (Tips and Best Practices)
 - Guide the student instead of immediately giving answers; add examples; use structured prompts; keep the UI simple (Tips)
 - Optional extra modes: Revision, Ask a Doubt, Challenge, Exam Preparation (Step 4)
-- Any LLM API (OpenAI / Claude / Gemini); HTML/CSS/JS frontend; Claude Code or VS Code with AI (Section 4)
+- Any LLM API (OpenAI, Gemini and others); HTML/CSS/JS frontend; an AI coding tool or VS Code with AI (Section 4)
 
 ### Optional features
 
